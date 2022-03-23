@@ -3,22 +3,20 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-public class StatusEffects : MonoBehaviour
+public class StatusEffects : MonoBehaviour, ITick
 {
-    int currentcount;
     PlayerScript PlayerScript;
     void Start()
     {
         //fuck you, I dont care about bad game bullshit, this works in the end.
-        PlayerScript = transform.GetComponent<PlayerScript>();
+        PlayerScript = GetComponent<PlayerScript>();
     }
-    void Update()
+    public void Tick()
     {
-
+        EffectHandle();
     }
-    void EffectHandle(object sender, System.Timers.ElapsedEventArgs e)
+    void EffectHandle()
     {
-        Debug.Log("About to calculate status effects");
         //write code to handle each effect
         foreach (StatusEffect se in (StatusEffect[])Enum.GetValues(typeof(StatusEffect)))
         {
@@ -40,7 +38,10 @@ public class StatusEffects : MonoBehaviour
                 case StatusEffect.God:
                     EffectGod();
                     break;
-                case StatusEffect.NoFly:
+                case StatusEffect.Bleeding:
+                    EffectBleeding();
+                    break;
+                case StatusEffect.NoClip:
                     break;
                 default:
                     break;
@@ -60,6 +61,22 @@ public class StatusEffects : MonoBehaviour
             else
             {
                 RemoveEffect(se);
+            }
+        }
+    }
+    void EffectBleeding()
+    {
+        if (PlayerScript.CurrentStatusEffects.ContainsKey(StatusEffect.Bleeding))
+        {
+            if (PlayerScript.CurrentStatusEffects[StatusEffect.Bleeding] > 0)
+            {
+                PlayerScript.lastDamage = PlayerScript.DeathTypes.Bleeding;
+                PlayerScript.Damage(0.01f); //change line to do something different in a differnet method or otherwise.
+                PlayerScript.CurrentStatusEffects[StatusEffect.Bleeding] -= 1;
+            }
+            else
+            {
+                RemoveEffect(StatusEffect.Bleeding);
             }
         }
     }
@@ -117,10 +134,11 @@ public class StatusEffects : MonoBehaviour
         None,
         Burning,
         Poison,
+        Bleeding,
         Suffocating,
         Regeneration,
         God,
-        NoFly,
+        NoClip,
     }
     public void RemoveEffect(StatusEffect effect)
     {

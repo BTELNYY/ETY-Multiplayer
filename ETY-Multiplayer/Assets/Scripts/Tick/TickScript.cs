@@ -10,14 +10,17 @@ public class TickScript : MonoBehaviour
     public float TickDelay = 0f;
     public float TickInterval = 0.04f;
     //list of all gameobjects which should be ticked
-    public List<GameObject> tickObjects = new List<GameObject>();
+    public List<GameObject> tickObjects = Globals.tickObjects;
+    //private parts
     void Start()
     {
         //invokes as a repeating method with this method name, interval and delay set above
+        Debug.Log("Starting repeating method");
         InvokeRepeating("TickUpdate", TickDelay, TickInterval);
     }
     void TickUpdate()
     {
+        Debug.Log("Ticking objects now.");
         foreach (GameObject obj in tickObjects)
         {
             ITick tick = obj.GetComponent<ITick>();

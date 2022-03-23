@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System;
 using UnityEngine;
@@ -18,19 +17,19 @@ public class PlayerScript : MonoBehaviour, ITick
     public Transform RespawnPoint;
     public DeathTypes lastDamage = DeathTypes.Unknown;
     public IDictionary<StatusEffects.StatusEffect, int> CurrentStatusEffects = new Dictionary<StatusEffects.StatusEffect, int>();
-    private GameObject ticker;
+
+    private StatusEffects effect;
     //private members
     void Start()
     {
-        //do some bullshit with finding objects
-        ticker = GameObject.Find("Ticker");
-        TickScript ts = ticker.GetComponent<TickScript>();
-        //add the player script to the list of gameobjects to tick
-        ts.tickObjects.Add(gameObject);
+        //this works better then the find object stuff since its really laggy and bad
+        Globals.AddTickObject(gameObject);
+        effect = GetComponent<StatusEffects>();
     }
     public void Tick()
     {
         //tick
+        effect.Tick();
     }
     void Update()
     {
@@ -67,12 +66,12 @@ public class PlayerScript : MonoBehaviour, ITick
         if (PlayerHealth - damage < 0)
         {
             PlayerHealth = 0;
-            UnityEngine.Debug.Log("Player has died!");
+            Debug.Log("Player has died!");
         }
         else
         {
             PlayerHealth -= damage;
-            UnityEngine.Debug.Log("Dealt: " + damage.ToString() + " damage to the player.");
+            Debug.Log("Dealt: " + damage.ToString() + " damage to the player.");
         }
     }
     public void Heal(float health, bool allowoverheal)
@@ -99,6 +98,7 @@ public class PlayerScript : MonoBehaviour, ITick
         Burning,
         Poison,
         Unknown,
+        Bleeding,
         GameOver,
         Attacked,
         FallDamage,
