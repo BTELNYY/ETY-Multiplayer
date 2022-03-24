@@ -9,7 +9,7 @@ public class CollisionDetector : MonoBehaviour
     public string GameObjectTag;
     public bool DetectCollisions = true;
     //protected prevents people from accessing this method, this is needed to prevent things from copying and duplicating
-    void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnter(Collision collision)
     {
         //Check for a match with the specified name on any GameObject that collides with your GameObject
         if (collision.gameObject.name == GameObjectName && DetectCollisions)
@@ -26,7 +26,7 @@ public class CollisionDetector : MonoBehaviour
         }
     }
     //these public classes have to be overriden in order to do things
-    void OnTagCollider()
+    public void OnTagCollider()
     {
         if(!DetectCollisions)
         {
@@ -34,7 +34,7 @@ public class CollisionDetector : MonoBehaviour
         }
 
     }
-    void OnNameCollider()
+    public void OnNameCollider()
     {
         if (!DetectCollisions)
         {

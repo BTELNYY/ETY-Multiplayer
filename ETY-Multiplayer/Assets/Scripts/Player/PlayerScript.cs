@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour, ITick
 {
     [Header("Player Setup")]
+    public string PlayerName = "Player";
     public Transform Player;
     public float PlayerHealth = 100;
     public float PlayerMaxHealth = 100;

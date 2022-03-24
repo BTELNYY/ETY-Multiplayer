@@ -60,13 +60,13 @@ public class PlayerInteractScript : MonoBehaviour
             {
                 if (_interactable.IsEnabled)
                 {
-                    _interactable.interact();
+                    _interactable.interact(gameObject);
                 }
                 else
                 {
-                    _interactable.interactfail();
+                    _interactable.interactfail(gameObject);
                 }
-
+                
 
 
             }

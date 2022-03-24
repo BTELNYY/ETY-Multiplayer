@@ -6,11 +6,11 @@ public abstract class InteractableObject : MonoBehaviour, IInteract
 {
     [Header("Ray Cast Settings")]
     public bool IsEnabled = true;
-    public virtual void interact()
+    public virtual void interact(GameObject obj)
     {
 
     }
-    public virtual void interactfail()
+    public virtual void interactfail(GameObject obj)
     {
 
     }

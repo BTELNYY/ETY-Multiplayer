@@ -20,7 +20,6 @@ public class TickScript : MonoBehaviour
     }
     void TickUpdate()
     {
-        Debug.Log("Ticking objects now.");
         foreach (GameObject obj in tickObjects)
         {
             ITick tick = obj.GetComponent<ITick>();
