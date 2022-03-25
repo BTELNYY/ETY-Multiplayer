@@ -20,12 +20,14 @@ public class PlayerScript : MonoBehaviour, ITick
     public IDictionary<StatusEffects.StatusEffect, int> CurrentStatusEffects = new Dictionary<StatusEffects.StatusEffect, int>();
 
     private StatusEffects effect;
+    private InventoryScript inventory;
     //private members
     void Start()
     {
         //this works better then the find object stuff since its really laggy and bad
-        Globals.AddTickObject(gameObject);
+        Globals.AddITick(this);
         effect = GetComponent<StatusEffects>();
+        inventory = GetComponent<InventoryScript>();
     }
     public void Tick()
     {
@@ -51,6 +53,12 @@ public class PlayerScript : MonoBehaviour, ITick
         {
             PermaDeath();
         }
+    }
+    public void Suicide()
+    {
+        lastDamage = DeathTypes.Suicide;
+        Damage(PlayerHealth);
+        Kill(lastDamage);
     }
     void PermaDeath()
     {

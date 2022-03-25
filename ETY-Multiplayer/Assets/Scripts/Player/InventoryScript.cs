@@ -7,78 +7,112 @@ public class InventoryScript : MonoBehaviour, ITick
     [Header("Item and inventory settings")]
     public KeyCode PrimaryUse = KeyCode.Mouse0;
     public KeyCode SecondaryUse = KeyCode.Mouse1;
-    public KeyCode InventoryKey = KeyCode.F;
-    public KeyCode DropKey = KeyCode.Q;
+    public KeyCode DropKey = KeyCode.T;
+    public KeyCode SlotOne = KeyCode.Alpha1;
+    public KeyCode SlotTwo = KeyCode.Alpha2;
+    public KeyCode SlotThree = KeyCode.Alpha3;
+    public KeyCode SlotFour = KeyCode.Alpha4;
+    public KeyCode SlotFive = KeyCode.Alpha5;
     //private members
     PlayerScript player;
-    IDictionary<int, ItemBase> Inventory = new Dictionary<int, ItemBase>();
-    //by default, the player is holding nothing
-    ItemBase CurrentItem = ItemUtility.GetItemScript(ItemUtility.Items.none);
+    //use this when you want to add an item to the inventory, or remove it.
+    IDictionary<int, GameObject> Inventory = new Dictionary<int, GameObject>();
     GameObject ItemModel;
+    int CurrentSlot;
     bool[] InventorySlots = new bool[5];
-    int TickCounter = 0;
-    bool InventoryOpen = false;
-    IItem ItemInterface;
+    ItemBase ItemScript;
     public void Tick()
     {
-        //a check to remove item duplicates and other bugs
-        if (TickCounter == 100)
+        if (Input.GetKeyDown(DropKey))
         {
-            TickCounter = 0;
-            foreach (int i in Inventory.Keys)
+            if (ItemScript != null)
             {
-                if (i > InventorySlots.Length)
-                {
-                    Inventory.Remove(i);
-                }
-                else
-                {
-                    InventorySlots[i] = true;
-                }
+                ItemScript.Drop(this, CurrentSlot);
             }
         }
-        else
+    }
+    void LoadNewItem(ItemUtility.Items item)
+    {
+        if (ItemUtility.GetItemScript(item) != null && ItemUtility.GetItem(item) != null)
         {
-            TickCounter++;
+            ItemModel = Instantiate(ItemUtility.GetItem(item));
+            ItemScript = ItemModel.GetComponent<ItemBase>();
+            ItemModel.SetActive(true);
+            ItemModel.transform.SetParent(transform);
+            ItemModel.transform.localPosition = ItemScript.DefaultSpawnLocation;
+            ItemModel.transform.localRotation = ItemScript.DefaultSpawnRotation;
+            ItemScript.Equip(gameObject);
         }
-        if (InventoryOpen)
+    }
+    void LoadFromInventory(int slot)
+    {
+        if (Inventory.ContainsKey(slot))
         {
-            OpenInventory();
-        }
-        if (Input.GetKeyDown(InventoryKey))
-        {
-            InventoryOpen = !InventoryOpen;
+            //tells the object that its being removed
+            ItemScript = ItemModel.GetComponent<ItemBase>();
+            ItemScript.Unequip(gameObject);
+            ItemModel.SetActive(false);
+            ItemModel = Inventory[slot];
+            ItemModel.SetActive(true);
+            ItemModel.transform.SetParent(transform);
+            ItemModel.transform.localPosition = ItemScript.DefaultSpawnLocation;
+            ItemModel.transform.localRotation = ItemScript.DefaultSpawnRotation;
+            //yes, another getcomponent.
+            ItemScript = ItemModel.GetComponent<ItemBase>();
+            ItemScript.Equip(gameObject);
         }
     }
     void Start()
     {
-        Globals.AddTickObject(gameObject);
+        ClearItems();
+        Globals.AddITick(this);
         player = gameObject.GetComponent<PlayerScript>();
+        //by default, the player is holding nothing
+        LoadNewItem(ItemUtility.Items.none);
     }
     void Update()
     {
-        if (!InventoryOpen)
-        {
-            if (Input.GetKeyDown(PrimaryUse))
+        if (Input.GetKeyDown(PrimaryUse))
+        {            
+            if (ItemScript != null)
             {
-                CurrentItem.PrimaryUse(gameObject);
-            }
-            if (Input.GetKeyDown(SecondaryUse))
-            {
-                CurrentItem.SecondaryUse(gameObject);
+                ItemScript.PrimaryUse(gameObject);
             }
         }
+        if (Input.GetKeyDown(SecondaryUse))
+        {
+            if (ItemScript != null)
+            {
+                ItemScript.SecondaryUse(gameObject);
+            }
+        }
+        if (Input.GetKeyDown(SlotOne))
+        {
+            CurrentSlot = 1;
+            LoadFromInventory(1);
+        }
+        if (Input.GetKeyDown(SlotTwo))
+        {
+            CurrentSlot = 2;
+            LoadFromInventory(2);
+        }
+        if (Input.GetKeyDown(SlotThree))
+        {
+            CurrentSlot = 3;
+            LoadFromInventory(3);
+        }
+        if (Input.GetKeyDown(SlotFour))
+        {
+            CurrentSlot = 4;
+            LoadFromInventory(4);
+        }
+        if (Input.GetKeyDown(SlotFive))
+        {
+            CurrentSlot = 5;
+            LoadFromInventory(5);
+        }
     }
-    void OpenInventory()
-    {
-        //ui code goes here
-
-        //this shit needs to set the current held item btw
-        //debug code
-
-        ItemModel = Instantiate(CurrentItem.ItemObject, new Vector3(0, 0, 0), Quaternion.identity);
-    }
-    public void AddItem(ItemBase item, int slot)
+    public void AddItem(GameObject item, int slot)
     {
         //fail safe to prevent items from just being deleted for no reason
         if (InventorySlots[slot])
@@ -131,5 +165,10 @@ public class InventoryScript : MonoBehaviour, ITick
     public void ClearItems()
     {
         Inventory.Clear();
+        Inventory.Add(1, null);
+        Inventory.Add(2, null);
+        Inventory.Add(3, null);
+        Inventory.Add(4, null);
+        Inventory.Add(5, null);
     }
 }

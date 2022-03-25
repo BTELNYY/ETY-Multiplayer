@@ -9,41 +9,34 @@ public class TickScript : MonoBehaviour
     [Header("Ticker Settings")]
     public float TickDelay = 0f;
     public float TickInterval = 0.04f;
+    public bool OneObjectPerTick = false;
     //list of all gameobjects which should be ticked
-    public List<GameObject> tickObjects = Globals.tickObjects;
+    //thanks springcup
+    public List<ITick> tickObjects = Globals.tickObjects;
     //private parts
     void Start()
     {
         //invokes as a repeating method with this method name, interval and delay set above
         Debug.Log("Starting repeating method");
-        InvokeRepeating("TickUpdate", TickDelay, TickInterval);
+        StartCoroutine(TickUpdateCoroutine());
     }
-    void TickUpdate()
+    private IEnumerator TickUpdateCoroutine()
     {
-        foreach (GameObject obj in tickObjects)
+        yield return new WaitForSeconds(TickDelay); // wait before execution; we don't cache this because it only runs once
+
+        WaitForSeconds tickIntervalWait = new WaitForSeconds(TickInterval); // cache the waiting time so you don't have to create a new one for each loop; this works because the value doesn't change (if it does change, feel free to modify the code to allow that)
+        while (true)
         {
-            ITick tick = obj.GetComponent<ITick>();
-            if (tick == null)
+            foreach (ITick obj in tickObjects)
             {
-                //if ITick is not found
-                Debug.LogError(obj.ToString() + " does not implement the ITick interface even though it is registered as a tick object.");
+                obj.Tick();
+                if (OneObjectPerTick)
+                {
+                    yield return null;
+                }
+                // yield return null; // pause after ticking an object if you don't need them to be ticked in the same frame
             }
-            else
-            {
-                //tick the object
-                tick.Tick();
-            }
-        }
-    }
-    public void addObject(GameObject obj)
-    {
-        if (tickObjects.Contains(obj))
-        {
-            return;
-        }
-        else
-        {
-            tickObjects.Add(obj);
+            yield return tickIntervalWait; // pause after ticking all objects
         }
     }
 }

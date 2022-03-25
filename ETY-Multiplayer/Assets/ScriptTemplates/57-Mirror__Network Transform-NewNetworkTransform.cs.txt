@@ -18,7 +18,6 @@ public class #SCRIPTNAME# : NetworkTransformBase
     /*
     [Header("Target")]
     public Transform target;
-
     protected override Transform targetComponent => target;
     */
 
