@@ -682,7 +682,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 663834164c6a04740aaa1b778249ce7e, type: 2}
+  - {fileID: 2100000, guid: fa719f9146a9cd840bb2cea7563b0d75, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -889,7 +889,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5390029283267037757}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.262, z: 0}
+  m_LocalPosition: {x: 0, y: 0.262, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4453928577911511827}
@@ -952,6 +952,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsEnabled: 1
   IsItem: 1
+  Item: {fileID: 1146186048323036809}
 --- !u!65 &4193906550524262219
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1012,16 +1013,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Yandere Knife
-  Description: its meant for killing people....
+  Description: None
   IsEnabled: 1
   HideInInventory: 0
   IconName: 
-  ItemIDString: 
+  ItemIDString: yandere_knife
   ItemID: 0
   Durability: -1
-  Damage: 30
+  Damage: 0
   Healing: 0
   Item: 1
-  ItemObject: {fileID: 0}
+  ItemObject: {fileID: 1146186048323036809}
   DefaultSpawnLocation: {x: 0, y: 0, z: 0}
   DefaultSpawnRotation: {x: 0, y: 0, z: 0, w: 0}

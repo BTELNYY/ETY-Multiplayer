@@ -47,6 +47,10 @@ public class PlayerScript : MonoBehaviour, ITick
     {
         return inventory;
     }
+    public GameObject GetPlayerObject()
+    {
+        return gameObject;
+    }
     public void Tick()
     {
         //tick

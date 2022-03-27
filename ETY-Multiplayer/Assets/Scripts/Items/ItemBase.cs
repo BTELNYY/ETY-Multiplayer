@@ -15,7 +15,7 @@ public class ItemBase : MonoBehaviour, IItem, IInteract
     public int Damage = 0;
     public int Healing = 0;
     public ItemUtility.Items Item = ItemUtility.Items.none;
-    public GameObject ItemObject;
+    public Transform ItemObject;
     public Vector3 DefaultSpawnLocation = new Vector3(0, 0, 0);
     public Quaternion DefaultSpawnRotation = new Quaternion(0, 0, 0, 0);
     protected virtual ItemUtility.Items CurrentItem()
@@ -24,20 +24,27 @@ public class ItemBase : MonoBehaviour, IItem, IInteract
     }
     public virtual void interact(PlayerScript ps)
     {
-
         InventoryScript inv = ps.GetInventory();
         if (inv.CheckFullInventory())
         {
-            Debug.Log(ps.name + "'s inventory is full");
+            Debug.Log(ps.PlayerName + "'s inventory is full");
             //the inventory is full.
             return;
         }
         else
         {
             int slot = inv.GetFirstEmptySlot();
-            inv.AddItem(gameObject, slot);
-            Destroy(gameObject);
+            Debug.Log("Adding Item " + ItemObject.name + " to slot " + slot);
+            inv.AddItem(ItemObject, slot);
+            Debug.Log("Setting the trasnforms parent");
+            GameObject Player = ps.GetPlayerObject();
+            ItemObject.SetParent(Player.transform);
+            Debug.Log("Destroying the old object");
         }
+    }
+    public virtual void SanityCheck()
+    {
+        Debug.Log(ItemObject.name + ": Sanity Check");
     }
     public virtual void interactfail(PlayerScript ps)
     {
@@ -69,7 +76,7 @@ public class ItemBase : MonoBehaviour, IItem, IInteract
     }
     public virtual void Pickup(InventoryScript invscr, int slot)
     {
-        invscr.AddItem(gameObject, invscr.GetFirstEmptySlot());
+        invscr.AddItem(ItemObject, invscr.GetFirstEmptySlot());
     }
     public virtual void Delete(InventoryScript invscr, int slot)
     {
