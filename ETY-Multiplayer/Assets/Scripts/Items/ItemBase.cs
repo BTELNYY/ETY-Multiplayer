@@ -7,7 +7,7 @@ public class ItemBase : MonoBehaviour, IItem, IInteract
     public string Name = "None";
     public string Description = "None";
     public bool IsEnabled = true;
-    public bool HideInInventory = true;
+    public bool HideInInventory = false;
     public string IconName;
     public string ItemIDString;
     public int ItemID = 0;

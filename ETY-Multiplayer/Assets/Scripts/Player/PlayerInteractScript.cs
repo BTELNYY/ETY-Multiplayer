@@ -52,15 +52,15 @@ public class PlayerInteractScript : MonoBehaviour
     {
         //mghit need a chnge to player position?
         Ray _ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
-
         bool _hitSomething = Physics.SphereCast(_ray, rayShpereRadius, out RaycastHit _hitInfo, rayDistance, interactableLayer);
         Debug.DrawRay(_ray.origin, _ray.direction * rayDistance, _hitSomething ? Color.green : Color.red);
         if (_hitSomething)
         {
             //did it hit the thing
-            if (_hitInfo.transform.CompareTag("Item"))
+            InteractableObject _interactable = _hitInfo.transform.GetComponent<InteractableObject>();
+            if (_interactable != null)
             {
-                ItemBase _interactable = _hitInfo.transform.GetComponent<ItemBase>();
+                
                 if (_interactable.IsEnabled && !DenyInteractions)
                 {
                     _interactable.interact(playerScript);
@@ -72,23 +72,12 @@ public class PlayerInteractScript : MonoBehaviour
             }
             else
             {
-                InteractableObject _interactable = _hitInfo.transform.GetComponent<InteractableObject>();
-                if (_interactable != null)
-                {
-                    if (_interactable.IsEnabled && !DenyInteractions)
-                    {
-                        _interactable.interact(playerScript);
-                    }
-                    else
-                    {
-                        _interactable.interactfail(playerScript);
-                    }
-                }
+                Debug.Log("No Interactable Object Found");
             }
         }
         else
         {
-            Debug.Log("No interactible in object");
+            Debug.Log("Did not hit anything");
         }
     }
 }

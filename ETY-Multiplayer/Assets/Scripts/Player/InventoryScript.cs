@@ -23,13 +23,7 @@ public class InventoryScript : MonoBehaviour, ITick
     ItemBase ItemScript;
     public void Tick()
     {
-        if (Input.GetKeyDown(DropKey))
-        {
-            if (ItemScript != null)
-            {
-                ItemScript.Drop(this, CurrentSlot);
-            }
-        }
+
     }
     void LoadNewItem(ItemUtility.Items item)
     {
@@ -93,6 +87,13 @@ public class InventoryScript : MonoBehaviour, ITick
             else
             {
                 Debug.Log("ItemScript is null");
+            }
+        }
+        if (Input.GetKeyDown(DropKey))
+        {
+            if (ItemScript != null)
+            {
+                ItemScript.Drop(this, CurrentSlot);
             }
         }
         if (Input.GetKeyDown(SlotOne))

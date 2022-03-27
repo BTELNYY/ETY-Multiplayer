@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 public interface IInteract
 {
-    void interact(PlayerScript ps);
-    void interactfail(PlayerScript ps);
+    public void interact(PlayerScript ps);
+    public void interactfail(PlayerScript ps);
 }
