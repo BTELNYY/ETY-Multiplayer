@@ -3,16 +3,17 @@ using UnityEngine;
 
 public class ItemNoneScript : ItemBase
 {
+    //deprecated class
     [System.NonSerialized]
     public new string Name = "None";
-    public override void PrimaryUse(GameObject obj)
+    public override void PrimaryUse(PlayerScript ps)
     {
-        base.PrimaryUse(obj);
+        base.PrimaryUse(ps);
         Debug.Log("PrimaryUse");
     }
-    public override void SecondaryUse(GameObject obj)
+    public override void SecondaryUse(PlayerScript ps)
     {
-        base.SecondaryUse(obj);
+        base.SecondaryUse(ps);
         Debug.Log("SecondaryUse");
     }
 }

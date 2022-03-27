@@ -6,6 +6,7 @@ using UnityEngine;
 public class StatusEffects : MonoBehaviour, ITick
 {
     PlayerScript PlayerScript;
+    int Ticks;
     void Start()
     {
         //fuck you, I dont care about bad game bullshit, this works in the end.
@@ -13,7 +14,13 @@ public class StatusEffects : MonoBehaviour, ITick
     }
     public void Tick()
     {
-        EffectHandle();
+        //25 times per second
+        Ticks++; //tick updates
+        EffectHandle(); //script handles effects
+        if (Ticks == 25) //reset ticks
+        {
+            Ticks = 0;
+        }
     }
     void EffectHandle()
     {
@@ -23,14 +30,13 @@ public class StatusEffects : MonoBehaviour, ITick
             switch (se)
             {
                 case StatusEffect.None:
+                    //do nothing
                     break;
                 case StatusEffect.Burning:
                     EffectBurning();
                     break;
                 case StatusEffect.Poison:
                     EffectPoison();
-                    break;
-                case StatusEffect.Suffocating:
                     break;
                 case StatusEffect.Regeneration:
                     EffectRegen();
@@ -41,9 +47,8 @@ public class StatusEffects : MonoBehaviour, ITick
                 case StatusEffect.Bleeding:
                     EffectBleeding();
                     break;
-                case StatusEffect.NoClip:
-                    break;
                 default:
+                    //do nothing, this will never happen becuase of the enum not being empty or having extra effects
                     break;
             }
         }
@@ -51,12 +56,12 @@ public class StatusEffects : MonoBehaviour, ITick
     void EffectGod()
     {
         StatusEffect se = StatusEffect.God;
-        if (PlayerScript.CurrentStatusEffects.ContainsKey(se))
+        if (PlayerScript.HasEffect(se))
         {
-            if (PlayerScript.CurrentStatusEffects[se] > 0)
+            if (PlayerScript.GetEffectDuration(se) > 0 && Ticks == 25)
             {
                 PlayerScript.SetHealth(-1); //change line to do something different in a differnet method or otherwise.
-                PlayerScript.CurrentStatusEffects[se] -= 1;
+                PlayerScript.ReduceEffectDuration(se, 1);
             }
             else
             {
@@ -66,29 +71,31 @@ public class StatusEffects : MonoBehaviour, ITick
     }
     void EffectBleeding()
     {
-        if (PlayerScript.CurrentStatusEffects.ContainsKey(StatusEffect.Bleeding))
+        StatusEffect se = StatusEffect.Bleeding;
+        if (PlayerScript.HasEffect(se))
         {
-            if (PlayerScript.CurrentStatusEffects[StatusEffect.Bleeding] > 0)
+            if (PlayerScript.GetEffectDuration(se) > 0 && Ticks == 25)
             {
-                PlayerScript.lastDamage = PlayerScript.DeathTypes.Bleeding;
-                PlayerScript.Damage(0.01f); //change line to do something different in a differnet method or otherwise.
-                PlayerScript.CurrentStatusEffects[StatusEffect.Bleeding] -= 1;
+                PlayerScript.SetLastDamage(PlayerScript.DeathTypes.Bleeding);
+                PlayerScript.Damage(5f); //change line to do something different in a differnet method or otherwise.
+                PlayerScript.ReduceEffectDuration(se, 1);
             }
             else
             {
-                RemoveEffect(StatusEffect.Bleeding);
+                RemoveEffect(se);
             }
         }
     }
     void EffectPoison()
     {
-        if (PlayerScript.CurrentStatusEffects.ContainsKey(StatusEffect.Poison))
+        StatusEffect se = StatusEffect.Poison;
+        if (PlayerScript.HasEffect(se))
         {
-            if (PlayerScript.CurrentStatusEffects[StatusEffect.Poison] > 0)
+            if (PlayerScript.GetEffectDuration(se) > 0 && Ticks == 25)
             {
-                PlayerScript.lastDamage = PlayerScript.DeathTypes.Poison;
-                PlayerScript.Damage(0.01f); //change line to do something different in a differnet method or otherwise.
-                PlayerScript.CurrentStatusEffects[StatusEffect.Poison] -= 1;
+                PlayerScript.SetLastDamage(PlayerScript.DeathTypes.Poison);
+                PlayerScript.Damage(7f); //change line to do something different in a differnet method or otherwise.
+                PlayerScript.ReduceEffectDuration(se, 1);
             }
             else
             {
@@ -99,12 +106,12 @@ public class StatusEffects : MonoBehaviour, ITick
     void EffectRegen()
     {
         StatusEffect se = StatusEffect.Regeneration;
-        if (PlayerScript.CurrentStatusEffects.ContainsKey(se))
+        if (PlayerScript.HasEffect(se))
         {
-            if (PlayerScript.CurrentStatusEffects[se] > 0)
+            if (PlayerScript.GetEffectDuration(se) > 0 && Ticks == 25)
             {
-                PlayerScript.Heal(0.1f, false); //change line to do something different in a differnet method or otherwise.
-                PlayerScript.CurrentStatusEffects[se] -= 1;
+                PlayerScript.Heal(2f, false); //change line to do something different in a differnet method or otherwise.
+                PlayerScript.ReduceEffectDuration(se, 1);
             }
             else
             {
@@ -115,13 +122,13 @@ public class StatusEffects : MonoBehaviour, ITick
     void EffectBurning()
     {
         StatusEffect se = StatusEffect.Burning;
-        if (PlayerScript.CurrentStatusEffects.ContainsKey(se))
+        if (PlayerScript.HasEffect(se))
         {
-            if (PlayerScript.CurrentStatusEffects[se] > 0)
+            if (PlayerScript.GetEffectDuration(se) > 0 && Ticks == 25)
             {
-                PlayerScript.lastDamage = PlayerScript.DeathTypes.Burning;
-                PlayerScript.Damage(0.05f); //change line to do something different in a differnet method or otherwise.
-                PlayerScript.CurrentStatusEffects[se] -= 1;
+                PlayerScript.SetLastDamage(PlayerScript.DeathTypes.Burning);
+                PlayerScript.Damage(10f); //change line to do something different in a differnet method or otherwise.
+                PlayerScript.ReduceEffectDuration(se, 1);
             }
             else
             {
@@ -135,24 +142,11 @@ public class StatusEffects : MonoBehaviour, ITick
         Burning,
         Poison,
         Bleeding,
-        Suffocating,
         Regeneration,
         God,
-        NoClip,
     }
-    public void RemoveEffect(StatusEffect effect)
+    void RemoveEffect(StatusEffect effect)
     {
-        PlayerScript.CurrentStatusEffects.Remove(effect);
-    }
-    public void AddEffect(StatusEffect effect, int duration)
-    {
-        if (PlayerScript.CurrentStatusEffects.ContainsKey(effect))
-        {
-            PlayerScript.CurrentStatusEffects[effect] += duration;
-        }
-        else
-        {
-            PlayerScript.CurrentStatusEffects.Add(effect, duration);
-        }
+        PlayerScript.RemoveEffect(effect);
     }
 }

@@ -6,9 +6,11 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour, ITick
 {
+    [Header("Object Setup")]
+    public Transform Camera;
+    public Transform Player;
     [Header("Player Setup")]
     public string PlayerName = "Player";
-    public Transform Player;
     public float PlayerHealth = 100;
     public float PlayerMaxHealth = 100;
     public bool HealthRegen = false;
@@ -16,18 +18,34 @@ public class PlayerScript : MonoBehaviour, ITick
     [Header("Respawn Settings")]
     public bool CanRespawn = false;
     public Transform RespawnPoint;
-    public DeathTypes lastDamage = DeathTypes.Unknown;
-    public IDictionary<StatusEffects.StatusEffect, int> CurrentStatusEffects = new Dictionary<StatusEffects.StatusEffect, int>();
 
+    //new private members
+    DeathTypes lastDamage = DeathTypes.Unknown;
+    IDictionary<StatusEffects.StatusEffect, int> CurrentStatusEffects = new Dictionary<StatusEffects.StatusEffect, int>();
+
+
+
+    //private members, however these can be returned through a method
     private StatusEffects effect;
     private InventoryScript inventory;
+    private MovementScript movement;
+    private PlayerInteractScript interact;
+
+
     //private members
     void Start()
     {
         //this works better then the find object stuff since its really laggy and bad
         Globals.AddITick(this);
+        //load the required refrences
         effect = GetComponent<StatusEffects>();
         inventory = GetComponent<InventoryScript>();
+        movement = GetComponent<MovementScript>();
+        interact = GetComponent<PlayerInteractScript>();
+    }
+    public InventoryScript GetInventory()
+    {
+        return inventory;
     }
     public void Tick()
     {
@@ -76,6 +94,7 @@ public class PlayerScript : MonoBehaviour, ITick
         {
             PlayerHealth = 0;
             Debug.Log("Player has died!");
+            Kill(lastDamage);
         }
         else
         {
@@ -111,8 +130,8 @@ public class PlayerScript : MonoBehaviour, ITick
         GameOver,
         Attacked,
         FallDamage,
-        Electrecuted,
     }
+    //the purpose of these methods is to remove the dict from being public, as that would cause a lot of issues
     public void RemoveEffect(StatusEffects.StatusEffect effect)
     {
         CurrentStatusEffects.Remove(effect);
@@ -127,5 +146,31 @@ public class PlayerScript : MonoBehaviour, ITick
         {
             CurrentStatusEffects.Add(effect, duration);
         }
+    }
+    public bool HasEffect(StatusEffects.StatusEffect effect)
+    {
+        return CurrentStatusEffects.ContainsKey(effect);
+    }
+    public int GetEffectDuration(StatusEffects.StatusEffect effect)
+    {
+        if (CurrentStatusEffects.ContainsKey(effect))
+        {
+            return CurrentStatusEffects[effect];
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    public void ReduceEffectDuration(StatusEffects.StatusEffect effect, int amount)
+    {
+        if (CurrentStatusEffects.ContainsKey(effect))
+        {
+            CurrentStatusEffects[effect] = -amount;
+        }
+    }
+    public void SetLastDamage(DeathTypes death)
+    {
+        lastDamage = death;
     }
 }

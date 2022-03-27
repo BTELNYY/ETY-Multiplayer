@@ -252,7 +252,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &680559134
 GameObject:
@@ -318,15 +318,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b493e481f7cb234438a8f4ef22fd5aea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerName: Player
+  Camera: {fileID: 1247497158}
   Player: {fileID: 680559135}
+  PlayerName: Player
   PlayerHealth: 100
   PlayerMaxHealth: 100
   HealthRegen: 0
   HealthRegenPerTick: 1
   CanRespawn: 0
   RespawnPoint: {fileID: 0}
-  lastDamage: 3
 --- !u!114 &680559138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,12 +342,12 @@ MonoBehaviour:
   speed: 7.5
   jumpSpeed: 8
   gravity: 20
-  playerCamera: {fileID: 1247497160}
   lookSpeed: 2
   lookXLimit: 60
   walkingSpeed: 7.5
   runningSpeed: 11.5
   canMove: 1
+  playerCamera: {fileID: 1247497160}
 --- !u!143 &680559139
 CharacterController:
   m_ObjectHideFlags: 0
@@ -446,7 +446,7 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_cam: {fileID: 1247497158}
+  PlayerCamera: {fileID: 0}
   InteractKey: 101
   DenyInteractions: 0
   MaxUsage: 1
@@ -628,7 +628,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1226417399
 GameObject:
@@ -724,7 +724,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1247497157
 GameObject:
@@ -838,5 +838,79 @@ Transform:
   m_Children:
   - {fileID: 680559135}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1412387679
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3928362482728391414, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_Name
+      value: yandere_knife
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453928578648574028, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453928578648574028, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.8136122
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453928578648574028, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453928578648574028, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.3754022
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453928578648574028, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453928578648574028, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453928578648574028, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453928578648574028, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453928578648574028, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453928578648574028, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453928578648574028, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5390029281860163938, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_Name
+      value: yandere_knife
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cc6de60ca8dbe1b4aabe68baffc8c240, type: 3}

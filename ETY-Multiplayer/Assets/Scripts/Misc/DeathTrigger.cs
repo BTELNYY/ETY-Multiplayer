@@ -24,7 +24,7 @@ public class DeathTrigger : MonoBehaviour
         //gets the players controller script, and kills them
         PlayerScript ps = col.gameObject.GetComponent<PlayerScript>();
         //if they have the God status effect, ignore them
-        if (ps.CurrentStatusEffects.ContainsKey(StatusEffects.StatusEffect.God))
+        if (ps.HasEffect(StatusEffects.StatusEffect.God))
         {
             return;
         }

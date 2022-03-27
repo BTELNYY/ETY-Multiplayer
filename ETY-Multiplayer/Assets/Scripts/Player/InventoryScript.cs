@@ -41,7 +41,7 @@ public class InventoryScript : MonoBehaviour, ITick
             ItemModel.transform.SetParent(transform);
             ItemModel.transform.localPosition = ItemScript.DefaultSpawnLocation;
             ItemModel.transform.localRotation = ItemScript.DefaultSpawnRotation;
-            ItemScript.Equip(gameObject);
+            ItemScript.Equip(player);
         }
     }
     void LoadFromInventory(int slot)
@@ -49,9 +49,12 @@ public class InventoryScript : MonoBehaviour, ITick
         if (Inventory.ContainsKey(slot))
         {
             //tells the object that its being removed
-            ItemScript = ItemModel.GetComponent<ItemBase>();
-            ItemScript.Unequip(gameObject);
-            ItemModel.SetActive(false);
+            if(ItemModel != null)
+            {
+                ItemScript = ItemModel.GetComponent<ItemBase>();
+                ItemScript.Unequip(player);
+                ItemModel.SetActive(false);
+            }
             ItemModel = Inventory[slot];
             ItemModel.SetActive(true);
             ItemModel.transform.SetParent(transform);
@@ -59,7 +62,7 @@ public class InventoryScript : MonoBehaviour, ITick
             ItemModel.transform.localRotation = ItemScript.DefaultSpawnRotation;
             //yes, another getcomponent.
             ItemScript = ItemModel.GetComponent<ItemBase>();
-            ItemScript.Equip(gameObject);
+            ItemScript.Equip(player);
         }
     }
     void Start()
@@ -67,8 +70,6 @@ public class InventoryScript : MonoBehaviour, ITick
         ClearItems();
         Globals.AddITick(this);
         player = gameObject.GetComponent<PlayerScript>();
-        //by default, the player is holding nothing
-        LoadNewItem(ItemUtility.Items.none);
     }
     void Update()
     {
@@ -76,38 +77,67 @@ public class InventoryScript : MonoBehaviour, ITick
         {            
             if (ItemScript != null)
             {
-                ItemScript.PrimaryUse(gameObject);
+                ItemScript.PrimaryUse(player);
+            }
+            else
+            {
+                Debug.Log("ItemScript is null");
             }
         }
         if (Input.GetKeyDown(SecondaryUse))
         {
             if (ItemScript != null)
             {
-                ItemScript.SecondaryUse(gameObject);
+                ItemScript.SecondaryUse(player);
+            }
+            else
+            {
+                Debug.Log("ItemScript is null");
             }
         }
         if (Input.GetKeyDown(SlotOne))
         {
+            //should fix some errors
+            if (CurrentSlot == 1)
+            {
+                return;
+            }
             CurrentSlot = 1;
             LoadFromInventory(1);
         }
         if (Input.GetKeyDown(SlotTwo))
         {
+            if (CurrentSlot == 2)
+            {
+                return;
+            }
             CurrentSlot = 2;
             LoadFromInventory(2);
         }
         if (Input.GetKeyDown(SlotThree))
         {
+            if (CurrentSlot == 3)
+            {
+                return;
+            }
             CurrentSlot = 3;
             LoadFromInventory(3);
         }
         if (Input.GetKeyDown(SlotFour))
         {
+            if (CurrentSlot == 4)
+            {
+                return;
+            }
             CurrentSlot = 4;
             LoadFromInventory(4);
         }
         if (Input.GetKeyDown(SlotFive))
         {
+            if (CurrentSlot == 5)
+            {
+                return;
+            }
             CurrentSlot = 5;
             LoadFromInventory(5);
         }
@@ -126,7 +156,9 @@ public class InventoryScript : MonoBehaviour, ITick
                 slot = GetFirstEmptySlot();
             }
         }
+        item.transform.SetParent(transform); //attach the object to the player
         Inventory.Add(slot, item);
+        LoadFromInventory(slot);
     }
     public bool CheckFullInventory()
     {

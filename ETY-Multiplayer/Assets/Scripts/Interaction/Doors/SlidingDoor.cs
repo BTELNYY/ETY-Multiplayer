@@ -19,7 +19,7 @@ public class SlidingDoor : InteractableObject
     Vector3 MovePosition;
     bool startMove = false;
     bool doorInPosition;
-    public override void interact(GameObject obj)
+    public override void interact(PlayerScript ps)
     {
         startMove = !startMove;
     }

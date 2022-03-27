@@ -8,7 +8,7 @@ public class PlayerInteractScript : MonoBehaviour
     public float rayDistance;
     public float rayShpereRadius;
     public LayerMask interactableLayer;
-    public Transform m_cam;
+    public Transform PlayerCamera;
     [Header("Key Settings")]
     public KeyCode InteractKey = KeyCode.E; //KeyCode for interacting, for settings and stuff.
     [Header("Player Actions")]
@@ -16,9 +16,15 @@ public class PlayerInteractScript : MonoBehaviour
     [Header("Time Settings")]
     public int MaxUsage = 1;
     public int CooldownFrames = 10;
-
+    //private
     int CurrentUsage;
     int CooldownCounter;
+    PlayerScript playerScript;
+    void Start()
+    {
+        playerScript = GetComponent<PlayerScript>();
+        PlayerCamera = playerScript.Camera;
+    }
     void Update()
     {
         //meant to prevent interaction spam, eg spamming a door to glitch NPC's or break the door script.
@@ -45,59 +51,44 @@ public class PlayerInteractScript : MonoBehaviour
     void CastRay()
     {
         //mghit need a chnge to player position?
-        Ray _ray = new Ray(m_cam.transform.position, m_cam.transform.forward);
-        RaycastHit _hitInfo;
+        Ray _ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
 
-        bool _hitSomething = Physics.SphereCast(_ray, rayShpereRadius, out _hitInfo, rayDistance, interactableLayer);
+        bool _hitSomething = Physics.SphereCast(_ray, rayShpereRadius, out RaycastHit _hitInfo, rayDistance, interactableLayer);
         Debug.DrawRay(_ray.origin, _ray.direction * rayDistance, _hitSomething ? Color.green : Color.red);
         if (_hitSomething)
         {
             //did it hit the thing
-            InteractableObject _interactable = _hitInfo.transform.GetComponent<InteractableObject>();
-
-
-            if (_interactable != null)
+            if (_hitInfo.transform.CompareTag("Item"))
             {
-                if (_interactable.IsEnabled)
+                ItemBase _interactable = _hitInfo.transform.GetComponent<ItemBase>();
+                if (_interactable.IsEnabled && !DenyInteractions)
                 {
-                    _interactable.interact(gameObject);
+                    _interactable.interact(playerScript);
                 }
                 else
                 {
-                    _interactable.interactfail(gameObject);
+                    _interactable.interactfail(playerScript);
                 }
-                
-
-
             }
             else
             {
-                Debug.Log("No interactible in object");
+                InteractableObject _interactable = _hitInfo.transform.GetComponent<InteractableObject>();
+                if (_interactable != null)
+                {
+                    if (_interactable.IsEnabled && !DenyInteractions)
+                    {
+                        _interactable.interact(playerScript);
+                    }
+                    else
+                    {
+                        _interactable.interactfail(playerScript);
+                    }
+                }
             }
         }
-    }
-    public enum InteractFailTypes
-    {
-        InteractionDisabled,
-        AccessDenied,
-        ExceptionRaised,
-        Locked,
-        Unknown,
-    }
-    public string InteractionFailedToString(InteractFailTypes e)
-    {
-        switch (e)
+        else
         {
-            case InteractFailTypes.InteractionDisabled:
-                return "Interaction Disabled";
-            case InteractFailTypes.AccessDenied:
-                return "Access Denied";
-            case InteractFailTypes.ExceptionRaised:
-                return "Exception Raised";
-            case InteractFailTypes.Locked:
-                return "Object Locked";
-            default:
-                return "Unknown";
+            Debug.Log("No interactible in object");
         }
     }
 }

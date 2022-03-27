@@ -3,6 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 public interface IInteract
 {
-    void interact(GameObject obj);
-    void interactfail(GameObject obj);
+    void interact(PlayerScript ps);
+    void interactfail(PlayerScript ps);
 }
