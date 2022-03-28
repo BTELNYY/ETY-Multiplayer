@@ -17,7 +17,7 @@ public class InventoryScript : NetworkBehaviour, ITick
     //private members
     PlayerScript player;
     //use this when you want to add an item to the inventory, or remove it.
-    IDictionary<int, Transform> Inventory = new Dictionary<int, Transform>();
+    IDictionary<int, Transform> Inventory = new SyncDictionary<int, Transform>();
     [SyncVar]
     Transform ItemModel;
     [SyncVar]

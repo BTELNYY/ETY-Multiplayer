@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Mirror;
 
-public class TickScript : MonoBehaviour
+public class TickScript : NetworkBehaviour
 {
     // Start is called before the first frame update
     [Header("Ticker Settings")]
@@ -17,8 +18,11 @@ public class TickScript : MonoBehaviour
     void Start()
     {
         //invokes as a repeating method with this method name, interval and delay set above
-        Debug.Log("Starting repeating method");
-        StartCoroutine(TickUpdateCoroutine());
+        if (!isClientOnly)
+        {
+            Debug.Log("Starting repeating method");
+            StartCoroutine(TickUpdateCoroutine());
+        }
     }
     private IEnumerator TickUpdateCoroutine()
     {
