@@ -18,7 +18,7 @@ public class PlayerScript : MonoBehaviour, ITick
     [Header("Respawn Settings")]
     public bool CanRespawn = false;
     public Transform RespawnPoint;
-
+    
     //new private members
     DeathTypes lastDamage = DeathTypes.Unknown;
     IDictionary<StatusEffects.StatusEffect, int> CurrentStatusEffects = new Dictionary<StatusEffects.StatusEffect, int>();

@@ -61,10 +61,25 @@ public class InventoryScript : MonoBehaviour, ITick
             //yes, another getcomponent.
             ItemScript.SanityCheck(); //a sanity check to make sure the item is still valid, and that I am not going insane
             ItemScript.Equip(player);
+            CurrentSlot = slot;
         }
         else
         {
-            Debug.Log("No item in slot: " + slot);
+            Debug.Log("No item in slot: " + slot + "Calling show arm function");
+            ShowHand();
+        }
+    }
+    void ShowHand()
+    {
+        if(ItemModel == null)
+        {
+            Debug.Log("No item in hand");
+            return;
+        }
+        else
+        {
+            ItemScript = null;
+            ItemModel.localPosition = new Vector3(ItemModel.localPosition.x, 1000, ItemModel.localPosition.z);
         }
     }
     void Start()
