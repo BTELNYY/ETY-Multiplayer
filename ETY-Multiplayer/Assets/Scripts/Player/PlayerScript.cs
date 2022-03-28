@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Threading;
 using System;
 using UnityEngine;
-
-public class PlayerScript : MonoBehaviour, ITick
+using Mirror;
+public class PlayerScript : NetworkBehaviour, ITick
 {
     [Header("Object Setup")]
-    public Transform Camera;
+    Camera PlayerCamera;
     public Transform Player;
     [Header("Player Setup")]
     public string PlayerName = "Player";
+    [SyncVar]
     public float PlayerHealth = 100;
     public float PlayerMaxHealth = 100;
     public bool HealthRegen = false;
@@ -22,9 +23,6 @@ public class PlayerScript : MonoBehaviour, ITick
     //new private members
     DeathTypes lastDamage = DeathTypes.Unknown;
     IDictionary<StatusEffects.StatusEffect, int> CurrentStatusEffects = new Dictionary<StatusEffects.StatusEffect, int>();
-
-
-
     //private members, however these can be returned through a method
     private StatusEffects effect;
     private InventoryScript inventory;
@@ -33,10 +31,13 @@ public class PlayerScript : MonoBehaviour, ITick
 
 
     //private members
-    void Start()
+    public override void OnStartLocalPlayer()
     {
         //this works better then the find object stuff since its really laggy and bad
         Globals.AddITick(this);
+        Camera.main.transform.SetParent(transform);
+        Camera.main.transform.localPosition = new Vector3(0, 1f, 0);
+        PlayerCamera = Camera.main;
         //load the required refrences
         effect = GetComponent<StatusEffects>();
         inventory = GetComponent<InventoryScript>();
@@ -50,6 +51,14 @@ public class PlayerScript : MonoBehaviour, ITick
     public GameObject GetPlayerObject()
     {
         return gameObject;
+    }
+    public Transform GetPLayerTransform()
+    {
+        return Player;
+    }
+    public Camera GetPlayerCamera()
+    {
+        return PlayerCamera;
     }
     public void Tick()
     {

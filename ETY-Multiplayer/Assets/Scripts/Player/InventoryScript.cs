@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Mirror;
-public class InventoryScript : MonoBehaviour, ITick
+public class InventoryScript : NetworkBehaviour, ITick
 {
     [Header("Item and inventory settings")]
     public KeyCode PrimaryUse = KeyCode.Mouse0;
@@ -17,13 +17,11 @@ public class InventoryScript : MonoBehaviour, ITick
     //private members
     PlayerScript player;
     //use this when you want to add an item to the inventory, or remove it.
-    [SyncVar]
     IDictionary<int, Transform> Inventory = new Dictionary<int, Transform>();
     [SyncVar]
     Transform ItemModel;
     [SyncVar]
     int CurrentSlot;
-    [SyncVar]
     bool[] InventorySlots = new bool[5];
     ItemBase ItemScript;
     public void Tick()

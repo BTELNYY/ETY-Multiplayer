@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 public class ItemUtility : MonoBehaviour, ITick
 {
     public GameObject item_none;

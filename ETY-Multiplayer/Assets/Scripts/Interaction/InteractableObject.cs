@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class InteractableObject : MonoBehaviour, IInteract
+public class InteractableObject : NetworkBehaviour, IInteract
 {
     [Header("Ray Cast Settings")]
     [SyncVar]

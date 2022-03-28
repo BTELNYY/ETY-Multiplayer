@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class PlayerInteractScript : MonoBehaviour
+public class PlayerInteractScript : NetworkBehaviour
 {
     [Header("Ray Settings")]
     public float rayDistance;
@@ -20,18 +21,19 @@ public class PlayerInteractScript : MonoBehaviour
     int CurrentUsage;
     int CooldownCounter;
     PlayerScript playerScript;
-    void Start()
+    public override void OnStartLocalPlayer()
     {
         playerScript = GetComponent<PlayerScript>();
-        PlayerCamera = playerScript.Camera;
+        PlayerCamera = playerScript.GetPlayerCamera().transform;
     }
     void Update()
     {
+        if (!isLocalPlayer) { return; }
         //meant to prevent interaction spam, eg spamming a door to glitch NPC's or break the door script.
         if (CurrentUsage == MaxUsage)
         {
             CooldownCounter++;
-            if(CooldownFrames == CooldownCounter)
+            if (CooldownFrames == CooldownCounter)
             {
                 CurrentUsage = 0;
                 CooldownCounter = 0;
@@ -46,6 +48,8 @@ public class PlayerInteractScript : MonoBehaviour
             CurrentUsage++;
             CastRay();
         }
+        
+       
     }
 
     void CastRay()

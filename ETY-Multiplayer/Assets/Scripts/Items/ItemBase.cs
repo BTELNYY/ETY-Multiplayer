@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 using Mirror;
 using System.Collections.Generic;
-public class ItemBase : MonoBehaviour, IItem, IInteract
+public class ItemBase : NetworkBehaviour, IItem, IInteract
 {
     public string Name = "None";
     public string Description = "None";
@@ -72,12 +72,10 @@ public class ItemBase : MonoBehaviour, IItem, IInteract
     {
 
     }
-    [Command]
     public virtual void PrimaryUse(PlayerScript ps)
     {
 
     }
-    [Command]
     public virtual void SecondaryUse(PlayerScript ps)
     {
 
@@ -86,7 +84,6 @@ public class ItemBase : MonoBehaviour, IItem, IInteract
     {
 
     }
-    [Command]
     public virtual void Drop(InventoryScript invscr, int slot)
     {
         Debug.Log("Dropping " + ItemObject.name + " from slot " + slot);
