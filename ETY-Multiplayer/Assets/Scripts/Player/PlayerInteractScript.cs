@@ -57,11 +57,11 @@ public class PlayerInteractScript : MonoBehaviour
         if (_hitSomething)
         {
             //did it hit the thing
-            InteractableObject _interactable = _hitInfo.transform.GetComponent<InteractableObject>();
+            IInteract _interactable = _hitInfo.transform.GetComponent<IInteract>();
             if (_interactable != null)
             {
                 
-                if (_interactable.IsEnabled && !DenyInteractions)
+                if (!DenyInteractions)
                 {
                     _interactable.interact(playerScript);
                 }

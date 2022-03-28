@@ -12,6 +12,12 @@ public class MovementScript : MonoBehaviour
     public float lookXLimit = 60.0f;
     public float walkingSpeed = 7.5f;
     public float runningSpeed = 11.5f;
+    public float crouchSpeedDivider = 2f;
+    public float crouchWhileSprintingDivider = 4f;
+    [Header("Keybinds")]
+    public KeyCode runKey = KeyCode.LeftShift;
+    public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode crouchKey = KeyCode.LeftControl;
     [Header("Other Settings")]
     public bool canMove = true;
     public Camera playerCamera;
@@ -39,13 +45,28 @@ public class MovementScript : MonoBehaviour
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
         // Press Left Shift to run
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        bool isRunning = Input.GetKey(runKey);
+        bool isCrouching = Input.GetKey(crouchKey);
         float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Vertical") : 0;
         float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
         float movementDirectionY = moveDirection.y;
+        if (isCrouching && !isRunning)
+        {
+            //if the player is crouching, make them go slower also play anims or something
+            curSpeedX /= crouchSpeedDivider;
+        }
+        else if (isCrouching && isRunning)
+        {
+            //if the player is crouching and running, make them go slower also play anims or something
+            curSpeedX /= crouchWhileSprintingDivider;
+        }
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
-        if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
+
+
+
+
+        if (Input.GetKey(jumpKey) && canMove && characterController.isGrounded)
         {
             moveDirection.y = jumpSpeed;
         }

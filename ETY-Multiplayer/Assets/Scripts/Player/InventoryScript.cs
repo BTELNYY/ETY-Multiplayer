@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Mirror;
 public class InventoryScript : MonoBehaviour, ITick
 {
     [Header("Item and inventory settings")]
@@ -16,9 +17,13 @@ public class InventoryScript : MonoBehaviour, ITick
     //private members
     PlayerScript player;
     //use this when you want to add an item to the inventory, or remove it.
+    [SyncVar]
     IDictionary<int, Transform> Inventory = new Dictionary<int, Transform>();
+    [SyncVar]
     Transform ItemModel;
+    [SyncVar]
     int CurrentSlot;
+    [SyncVar]
     bool[] InventorySlots = new bool[5];
     ItemBase ItemScript;
     public void Tick()
@@ -66,10 +71,10 @@ public class InventoryScript : MonoBehaviour, ITick
         else
         {
             Debug.Log("No item in slot: " + slot + "Calling show arm function");
-            ShowHand();
+            ShowHand(false);
         }
     }
-    void ShowHand()
+    void ShowHand(bool doNotYeetIntoSpace)
     {
         if(ItemModel == null)
         {
@@ -78,8 +83,17 @@ public class InventoryScript : MonoBehaviour, ITick
         }
         else
         {
-            ItemScript = null;
-            ItemModel.localPosition = new Vector3(ItemModel.localPosition.x, 1000, ItemModel.localPosition.z);
+            if (!doNotYeetIntoSpace)
+            {
+                ItemScript = null;
+                ItemModel.localPosition = new Vector3(ItemModel.localPosition.x, 1000, ItemModel.localPosition.z);
+            }
+            else
+            {
+                //used for dropping the item
+                ItemScript = null;
+                ItemModel.localPosition = new Vector3(ItemModel.localPosition.x, ItemModel.position.y, ItemModel.localPosition.z + 0.5f);
+            }
         }
     }
     void Start()
@@ -161,7 +175,6 @@ public class InventoryScript : MonoBehaviour, ITick
         }
         item.SetParent(transform); //attach the object to the player
         Inventory.Add(slot, item);
-        item.gameObject.SetActive(false); //hide the item
         LoadFromInventory(slot);
     }
     public bool CheckFullInventory()
@@ -197,5 +210,8 @@ public class InventoryScript : MonoBehaviour, ITick
     public void RemoveItem(int slot)
     {
         Inventory.Remove(slot);
+        ShowHand(true);
+        //remove the refrence to the item model
+        ItemModel = null;
     }
 }

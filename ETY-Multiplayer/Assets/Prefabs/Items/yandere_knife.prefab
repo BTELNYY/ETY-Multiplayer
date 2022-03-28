@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2631304965979208407
+--- !u!1 &5146347189405130309
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,10 +8,13 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3445136344124825709}
-  - component: {fileID: 565372347722827968}
-  - component: {fileID: 2896838173413329973}
-  - component: {fileID: 2631304965979208404}
+  - component: {fileID: 166165552950866673}
+  - component: {fileID: 2417672548332057538}
+  - component: {fileID: 940428971678405666}
+  - component: {fileID: 5146347189405130310}
+  - component: {fileID: 5146347189405130311}
+  - component: {fileID: 5146347189405130296}
+  - component: {fileID: 7442621336911754185}
   m_Layer: 0
   m_Name: yandere_knife
   m_TagString: Item
@@ -19,113 +22,35 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3445136344124825709
+--- !u!4 &166165552950866673
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2631304965979208407}
+  m_GameObject: {fileID: 5146347189405130309}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.8136122, y: 0, z: 0.3754022}
+  m_LocalPosition: {x: -3.8136122, y: 1.76, z: 0.3754022}
   m_LocalScale: {x: 10, y: 10, z: 10}
-  m_Children:
-  - {fileID: 2154988994095799799}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &565372347722827968
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2631304965979208407}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 2
---- !u!65 &2896838173413329973
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2631304965979208407}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.021067673, y: 0.041568734, z: 0.24247198}
-  m_Center: {x: 0, y: 0.25617597, z: 0.07056866}
---- !u!114 &2631304965979208404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2631304965979208407}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 489d92133e0395a4384bb54af8f9d709, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsEnabled: 1
---- !u!1 &6398812576140800323
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2154988994095799799}
-  - component: {fileID: 4479698433824103620}
-  - component: {fileID: 1345250865486674724}
-  - component: {fileID: 6398812576140800320}
-  - component: {fileID: 3032833451371275972}
-  - component: {fileID: 4064197853585536651}
-  m_Layer: 0
-  m_Name: yandere_knife
-  m_TagString: Item
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2154988994095799799
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6398812576140800323}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.262, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 3445136344124825709}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &4479698433824103620
+--- !u!33 &2417672548332057538
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6398812576140800323}
+  m_GameObject: {fileID: 5146347189405130309}
   m_Mesh: {fileID: -8419486736073817106, guid: 1ab45734ba8b6f74f9af3a93c6f784bd, type: 3}
---- !u!23 &1345250865486674724
+--- !u!23 &940428971678405666
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6398812576140800323}
+  m_GameObject: {fileID: 5146347189405130309}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -160,39 +85,53 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &6398812576140800320
+--- !u!114 &5146347189405130310
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6398812576140800323}
+  m_GameObject: {fileID: 5146347189405130309}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 303c76865d775f04b8bcbcd3637b5378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Yandere Knife
-  Description: its meant for killing people....
+  Description: None
   IsEnabled: 1
   HideInInventory: 0
+  CanBePickedUp: 1
   IconName: 
-  ItemIDString: 
+  ItemIDString: yandere_knife
   ItemID: 0
   Durability: -1
-  Damage: 30
+  Damage: 0
   Healing: 0
   Item: 1
-  ItemObject: {fileID: 0}
+  ItemObject: {fileID: 166165552950866673}
   DefaultSpawnLocation: {x: 0, y: 0, z: 0}
   DefaultSpawnRotation: {x: 0, y: 0, z: 0, w: 0}
---- !u!54 &3032833451371275972
+--- !u!65 &5146347189405130311
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5146347189405130309}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.021067673, y: 0.04349451, z: 0.24247198}
+  m_Center: {x: 0, y: -0.007601738, z: 0.07056866}
+--- !u!54 &5146347189405130296
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6398812576140800323}
+  m_GameObject: {fileID: 5146347189405130309}
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
@@ -202,16 +141,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &4064197853585536651
-BoxCollider:
+--- !u!114 &7442621336911754185
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6398812576140800323}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_GameObject: {fileID: 5146347189405130309}
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.009070001, y: 0.036878426, z: 0.23935202}
-  m_Center: {x: 0, y: -0.008164582, z: 0.071072996}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: cc6de60ca8dbe1b4aabe68baffc8c240
+  hasSpawned: 0
