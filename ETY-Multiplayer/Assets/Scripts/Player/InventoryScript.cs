@@ -15,20 +15,22 @@ public class InventoryScript : NetworkBehaviour
     public KeyCode SlotFour = KeyCode.Alpha4;
     public KeyCode SlotFive = KeyCode.Alpha5;
     private int selectedWeaponLocal = 1;
+    [SyncVar]
     public Transform[] weaponArray = new Transform[5];
     [SyncVar]
     private ItemBase ItemScript;
     private PlayerScript player;
     [SyncVar(hook = nameof(OnWeaponChanged))]
     public int activeWeaponSynced = 1;
-
+    private Transform CurrentTransform;
     void OnWeaponChanged(int _Old, int _New)
     {
         // disable old weapon
         // in range and not null
         if (0 < _Old && _Old < weaponArray.Length && weaponArray[_Old] != null)
+        {
             weaponArray[_Old].position = new Vector3(weaponArray[_Old].position.x, -100, weaponArray[_Old].position.z);
-
+        }
         // enable new weapon
         // in range and not null
         if (0 < _New && _New < weaponArray.Length && weaponArray[_New] != null)
@@ -37,6 +39,17 @@ public class InventoryScript : NetworkBehaviour
             weaponArray[_New].position = new Vector3(weaponArray[_Old].position.x, -100, weaponArray[_Old].position.z);
         }
 
+    }
+    void ShowHand(bool YeetIntoSpace, Transform item)
+    {
+        if (YeetIntoSpace)
+        {
+            item.position = new Vector3(item.position.x, -100, item.position.z);
+        }
+        else
+        {
+            item.position = new Vector3(item.position.x, -100, item.position.z);
+        }
     }
 
     [Command]
@@ -49,8 +62,87 @@ public class InventoryScript : NetworkBehaviour
     {
         // disable all weapons
         foreach (var item in weaponArray)
+        {
             if (item != null)
+            {
                 item.position = new Vector3(item.position.x, -100, item.position.z);
+            }
+        }
+        CurrentTransform = transform;
+    }
+    public void ItemManager(bool operation, Transform Item, int Slot)
+    {
+        //runs locally
+        int slot = GetFirstEmptySlot();
+        if (slot == -1)
+        {
+            Debug.Log("No empty slots");
+            return;
+        }
+        else
+        {
+            ServerItemManager(operation, Item, slot);
+        }
+    }
+    [Command]
+    void ServerItemManager(bool operation, Transform Item, int slot)
+    {
+        if(slot == 0)
+        {
+            foreach (var item in weaponArray)
+            {
+                if (item == Item) //if the item 
+                {
+                    
+                }
+            }
+        }
+        //function runs on server
+        if (operation)
+        {
+            weaponArray[slot] = Item;
+            //duplicate, its fine
+            ItemScript = Item.GetComponent<ItemBase>();
+            Item.SetParent(transform);
+            Debug.Log("Removing the rigidbody");
+            Rigidbody body = Item.GetComponent<Rigidbody>();
+            //disable item physics
+            body.isKinematic = true;
+            body.detectCollisions = false;
+            body.useGravity = false;
+            Debug.Log("Setting the trasnforms parent");
+            Item.transform.SetParent(transform);
+            Debug.Log("Setting the transforms local position");
+            Item.localPosition = ItemScript.DefaultSpawnLocation;
+            Item.localRotation = ItemScript.DefaultSpawnRotation;
+        }
+        else
+        {
+            weaponArray[slot] = null;
+            //make the item be affected by physics
+            //there is not getcomponenent cuz there is no need to have one, and item will never drop by default, it must be dropped by a player
+            Rigidbody body = weaponArray[slot].GetComponent<Rigidbody>();
+            body.isKinematic = false;
+            body.detectCollisions = true;
+            body.useGravity = true;
+            Item.SetParent(null, true);
+        }
+    }
+    public int GetFirstEmptySlot()
+    {
+        foreach (var item in weaponArray)
+        {
+            if (item == null)
+            {
+                return Array.IndexOf(weaponArray, item);
+            }
+            else
+            {
+                continue;
+            }
+        }
+        //no empty slot
+        return -1;
     }
     void Update()
     {

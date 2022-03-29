@@ -19,7 +19,6 @@ public class ItemBase : NetworkBehaviour, IItem, IInteract
     public int Healing = 0;
     public ItemUtility.Items Item = ItemUtility.Items.none;
     public Transform ItemObject;
-    public GameObject Object;
     public Vector3 DefaultSpawnLocation = new Vector3(0, 0, 0);
     public Quaternion DefaultSpawnRotation = new Quaternion(0, 0, 0, 0);
     //private members
@@ -35,28 +34,10 @@ public class ItemBase : NetworkBehaviour, IItem, IInteract
             return;
         }
         InventoryScript inv = ps.GetInventory();
-        if (inv.CheckFullInventory())
-        {
-            Debug.Log(ps.PlayerName + "'s inventory is full");
-            //the inventory is full.
-            return;
-        }
-        else
-        {
-            NetworkServer.Spawn(Object);
+        inv.ItemManager(true, ItemObject, 0);
             int slot = inv.GetFirstEmptySlot();
-            Debug.Log("Adding Item " + ItemObject.name + " to slot " + slot);
-            inv.AddItem(Object.transform, slot);
-            Debug.Log("Removing the rigidbody");
-            body = Object.GetComponent<Rigidbody>();
-            //disable item physics
-            body.isKinematic = true;
-            body.detectCollisions = false;
-            body.useGravity = false;
-            Debug.Log("Setting the trasnforms parent");
-            GameObject Player = ps.GetPlayerObject();
-            Object.transform.SetParent(Player.transform);
-        }
+
+        
     }
     public virtual void SanityCheck()
     {
@@ -89,20 +70,14 @@ public class ItemBase : NetworkBehaviour, IItem, IInteract
     public virtual void Drop(InventoryScript invscr, int slot)
     {
         Debug.Log("Dropping " + ItemObject.name + " from slot " + slot);
-        invscr.RemoveItem(slot);
-        //make the item be affected by physics
-        //there is not getcomponenent cuz there is no need to have one, and item will never drop by default, it must be dropped by a player
-        body.isKinematic = false;
-        body.detectCollisions = true;
-        body.useGravity = true;
-        ItemObject.SetParent(null, true);
+        invscr.ItemManager(false, ItemObject, 0);
     }
     public virtual void Pickup(InventoryScript invscr, int slot)
     {
-        invscr.AddItem(ItemObject, invscr.GetFirstEmptySlot());
+        invscr.ItemManager(true, ItemObject, 0);
     }
     public virtual void Delete(InventoryScript invscr, int slot)
     {
-        invscr.RemoveItem(slot);
+
     }
 }

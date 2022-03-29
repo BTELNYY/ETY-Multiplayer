@@ -18,9 +18,6 @@ public class PlayerScript : NetworkBehaviour, ITick
     public float PlayerMaxHealth = 100;
     public bool HealthRegen = false;
     public int HealthRegenPerTick = 1;
-    public TextMeshProUGUI playerNameText;
-    public GameObject floatingInfo;
-    private Material playerMaterialClone;
     [Header("Respawn Settings")]
     public bool CanRespawn = false;
     public Transform RespawnPoint;
@@ -42,12 +39,8 @@ public class PlayerScript : NetworkBehaviour, ITick
         Camera.main.transform.SetParent(transform);
         Camera.main.transform.localPosition = new Vector3(0, 1f, 0);
 
-        floatingInfo.transform.localPosition = new Vector3(0, -0.3f, 0.6f);
-        floatingInfo.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-
         string name = "Player" + Random.Range(100, 999);
         Color color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-        CmdSetupPlayer(name, color);
         PlayerCamera = Camera.main;
         //load the required refrences
         effect = GetComponent<StatusEffects>();
@@ -55,22 +48,6 @@ public class PlayerScript : NetworkBehaviour, ITick
         movement = GetComponent<MovementScript>();
         interact = GetComponent<PlayerInteractScript>();
 
-    }
-    public void CmdSetupPlayer(string _name, Color _col)
-    {
-        PlayerName = _name;
-        playerColor = _col;
-    }
-    public void OnNameChanged(string oldName, string newName)
-    {
-        PlayerName = newName;
-    }
-    void OnColorChanged(Color _Old, Color _New)
-    {
-        playerNameText.color = _New;
-        playerMaterialClone = new Material(GetComponent<Renderer>().material);
-        playerMaterialClone.color = _New;
-        GetComponent<Renderer>().material = playerMaterialClone;
     }
 
 
