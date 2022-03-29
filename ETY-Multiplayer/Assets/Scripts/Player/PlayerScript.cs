@@ -1,21 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using System;
 using UnityEngine;
 using Mirror;
+using TMPro;
 public class PlayerScript : NetworkBehaviour, ITick
 {
     [Header("Object Setup")]
     Camera PlayerCamera;
     public Transform Player;
+    public NetworkIdentity identity;
     [Header("Player Setup")]
     public string PlayerName = "Player";
+    public Color playerColor = Color.white;
     [SyncVar]
     public float PlayerHealth = 100;
     public float PlayerMaxHealth = 100;
     public bool HealthRegen = false;
     public int HealthRegenPerTick = 1;
+    public TextMeshProUGUI playerNameText;
+    public GameObject floatingInfo;
+    private Material playerMaterialClone;
     [Header("Respawn Settings")]
     public bool CanRespawn = false;
     public Transform RespawnPoint;
@@ -29,7 +34,6 @@ public class PlayerScript : NetworkBehaviour, ITick
     private MovementScript movement;
     private PlayerInteractScript interact;
 
-
     //private members
     public override void OnStartLocalPlayer()
     {
@@ -37,12 +41,56 @@ public class PlayerScript : NetworkBehaviour, ITick
         Globals.AddITick(this);
         Camera.main.transform.SetParent(transform);
         Camera.main.transform.localPosition = new Vector3(0, 1f, 0);
+
+        floatingInfo.transform.localPosition = new Vector3(0, -0.3f, 0.6f);
+        floatingInfo.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
+        string name = "Player" + Random.Range(100, 999);
+        Color color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        CmdSetupPlayer(name, color);
         PlayerCamera = Camera.main;
         //load the required refrences
         effect = GetComponent<StatusEffects>();
         inventory = GetComponent<InventoryScript>();
         movement = GetComponent<MovementScript>();
         interact = GetComponent<PlayerInteractScript>();
+
+    }
+    public void CmdSetupPlayer(string _name, Color _col)
+    {
+        PlayerName = _name;
+        playerColor = _col;
+    }
+    public void OnNameChanged(string oldName, string newName)
+    {
+        PlayerName = newName;
+    }
+    void OnColorChanged(Color _Old, Color _New)
+    {
+        playerNameText.color = _New;
+        playerMaterialClone = new Material(GetComponent<Renderer>().material);
+        playerMaterialClone.color = _New;
+        GetComponent<Renderer>().material = playerMaterialClone;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public void OnDestroy()
+    {
+        Globals.RemoveITick(this);
+    }
+    public NetworkIdentity GetIdentity()
+    {
+        return identity;
     }
     public InventoryScript GetInventory()
     {

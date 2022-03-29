@@ -19,6 +19,7 @@ public class ItemBase : NetworkBehaviour, IItem, IInteract
     public int Healing = 0;
     public ItemUtility.Items Item = ItemUtility.Items.none;
     public Transform ItemObject;
+    public GameObject Object;
     public Vector3 DefaultSpawnLocation = new Vector3(0, 0, 0);
     public Quaternion DefaultSpawnRotation = new Quaternion(0, 0, 0, 0);
     //private members
@@ -42,18 +43,19 @@ public class ItemBase : NetworkBehaviour, IItem, IInteract
         }
         else
         {
+            NetworkServer.Spawn(Object);
             int slot = inv.GetFirstEmptySlot();
             Debug.Log("Adding Item " + ItemObject.name + " to slot " + slot);
-            inv.AddItem(ItemObject, slot);
+            inv.AddItem(Object.transform, slot);
             Debug.Log("Removing the rigidbody");
-            body = ItemObject.GetComponent<Rigidbody>();
+            body = Object.GetComponent<Rigidbody>();
             //disable item physics
             body.isKinematic = true;
             body.detectCollisions = false;
             body.useGravity = false;
             Debug.Log("Setting the trasnforms parent");
             GameObject Player = ps.GetPlayerObject();
-            ItemObject.SetParent(Player.transform);
+            Object.transform.SetParent(Player.transform);
         }
     }
     public virtual void SanityCheck()

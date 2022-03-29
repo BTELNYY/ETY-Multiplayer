@@ -22,6 +22,7 @@ public class SlidingDoor : InteractableObject
     public override void interact(PlayerScript ps)
     {
         startMove = !startMove;
+        Debug.Log("Interacting with SlidingDoor");
     }
     void Start()
     {

@@ -21,10 +21,15 @@ public class PlayerInteractScript : NetworkBehaviour
     int CurrentUsage;
     int CooldownCounter;
     PlayerScript playerScript;
+    NetworkIdentity identity;
     public override void OnStartLocalPlayer()
     {
         playerScript = GetComponent<PlayerScript>();
         PlayerCamera = playerScript.GetPlayerCamera().transform;
+        Camera.main.transform.SetParent(transform);
+        Camera.main.transform.localPosition = new Vector3(0, 1f, 0);
+        PlayerCamera = Camera.main.transform;
+        identity = playerScript.GetIdentity();
     }
     void Update()
     {
@@ -46,42 +51,49 @@ public class PlayerInteractScript : NetworkBehaviour
         if (Input.GetKey(InteractKey) && !DenyInteractions)
         {
             CurrentUsage++;
-            CastRay();
+            CastRay(PlayerCamera);
         }
-        
-       
-    }
 
-    void CastRay()
+
+    }
+    void CastRay(Transform Camera)
     {
         //mghit need a chnge to player position?
-        Ray _ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
+        Ray _ray = new Ray(Camera.transform.position, Camera.transform.forward);
         bool _hitSomething = Physics.SphereCast(_ray, rayShpereRadius, out RaycastHit _hitInfo, rayDistance, interactableLayer);
         Debug.DrawRay(_ray.origin, _ray.direction * rayDistance, _hitSomething ? Color.green : Color.red);
         if (_hitSomething)
         {
-            //did it hit the thing
-            IInteract _interactable = _hitInfo.transform.GetComponent<IInteract>();
-            if (_interactable != null)
-            {
-                
-                if (!DenyInteractions)
-                {
-                    _interactable.interact(playerScript);
-                }
-                else
-                {
-                    _interactable.interactfail(playerScript);
-                }
-            }
-            else
-            {
-                Debug.Log("No Interactable Object Found");
-            }
+            CmdHitDetector(_hitInfo);
         }
         else
         {
             Debug.Log("Did not hit anything");
+        }
+    }
+    //imagine being me and being this stupid
+    [Command]
+    public void CmdHitDetector(RaycastHit _hitInfo)
+    {
+        //did it hit the thing
+        IInteract _interactable = _hitInfo.transform.GetComponent<IInteract>();
+        NetworkIdentity hit_identity = _hitInfo.transform.GetComponent<NetworkIdentity>();
+        //hit_identity.AssignClientAuthority(identity.connectionToClient);
+        if (_interactable != null)
+        {
+
+            if (!DenyInteractions)
+            {
+                _interactable.interact(playerScript);
+            }
+            else
+            {
+                _interactable.interactfail(playerScript);
+            }
+        }
+        else
+        {
+            Debug.Log("No Interactable Object Found");
         }
     }
 }
