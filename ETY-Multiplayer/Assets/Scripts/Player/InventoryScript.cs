@@ -15,8 +15,7 @@ public class InventoryScript : NetworkBehaviour
     public KeyCode SlotFour = KeyCode.Alpha4;
     public KeyCode SlotFive = KeyCode.Alpha5;
     private int selectedWeaponLocal = 1;
-    [SyncVar]
-    public Transform[] weaponArray = new Transform[5];
+    SyncList<Transform> weaponArray = new SyncList<Transform>(new Transform[5]);
     [SyncVar]
     private ItemBase ItemScript;
     private PlayerScript player;
@@ -25,31 +24,8 @@ public class InventoryScript : NetworkBehaviour
     private Transform CurrentTransform;
     void OnWeaponChanged(int _Old, int _New)
     {
-        // disable old weapon
-        // in range and not null
-        if (0 < _Old && _Old < weaponArray.Length && weaponArray[_Old] != null)
-        {
-            weaponArray[_Old].position = new Vector3(weaponArray[_Old].position.x, -100, weaponArray[_Old].position.z);
-        }
-        // enable new weapon
-        // in range and not null
-        if (0 < _New && _New < weaponArray.Length && weaponArray[_New] != null)
-        {
-            ItemScript = weaponArray[_New].GetComponent<ItemBase>();
-            weaponArray[_New].position = new Vector3(weaponArray[_Old].position.x, -100, weaponArray[_Old].position.z);
-        }
-
-    }
-    void ShowHand(bool YeetIntoSpace, Transform item)
-    {
-        if (YeetIntoSpace)
-        {
-            item.position = new Vector3(item.position.x, -100, item.position.z);
-        }
-        else
-        {
-            item.position = new Vector3(item.position.x, -100, item.position.z);
-        }
+        CmdChangeActiveWeapon(_New);
+        CmdEquipItem(_Old, _New);
     }
 
     [Command]
@@ -70,7 +46,7 @@ public class InventoryScript : NetworkBehaviour
         }
         CurrentTransform = transform;
     }
-    public void ItemManager(bool operation, Transform Item, int Slot)
+    public void ItemManager(bool operation, Transform Item)
     {
         //runs locally
         int slot = GetFirstEmptySlot();
@@ -81,21 +57,16 @@ public class InventoryScript : NetworkBehaviour
         }
         else
         {
-            ServerItemManager(operation, Item, slot);
+            CmdDropOrPickupItem(operation, Item, slot);
         }
     }
+    //this handles picking up and dropping items
     [Command]
-    void ServerItemManager(bool operation, Transform Item, int slot)
+    void CmdDropOrPickupItem(bool operation, Transform Item, int slot)
     {
-        if(slot == 0)
+        if (hasAuthority) 
         {
-            foreach (var item in weaponArray)
-            {
-                if (item == Item) //if the item 
-                {
-                    
-                }
-            }
+            Debug.Log(gameObject.name + " has authority to drop or pickup item");
         }
         //function runs on server
         if (operation)
@@ -115,29 +86,57 @@ public class InventoryScript : NetworkBehaviour
             Debug.Log("Setting the transforms local position");
             Item.localPosition = ItemScript.DefaultSpawnLocation;
             Item.localRotation = ItemScript.DefaultSpawnRotation;
+            activeWeaponSynced = slot;
         }
         else
         {
-            weaponArray[slot] = null;
             //make the item be affected by physics
             //there is not getcomponenent cuz there is no need to have one, and item will never drop by default, it must be dropped by a player
-            Rigidbody body = weaponArray[slot].GetComponent<Rigidbody>();
+            Rigidbody body = weaponArray[activeWeaponSynced].GetComponent<Rigidbody>();
             body.isKinematic = false;
             body.detectCollisions = true;
             body.useGravity = true;
             Item.SetParent(null, true);
+            weaponArray[activeWeaponSynced] = null;
+        }
+    }
+
+    [Command]
+    void CmdEquipItem(int _Old, int _New)
+    {
+        // disable old weapon
+        // in range and not null
+        if (weaponArray[_Old] != null)
+        {
+            ItemScript = null;
+            weaponArray[_Old].localPosition = new Vector3(weaponArray[_Old].position.x, -100, weaponArray[_Old].position.z);
+        }
+        // enable new weapon
+        // in range and not null
+        if (weaponArray[_New] != null)
+        {
+            ItemScript = weaponArray[_New].GetComponent<ItemBase>();
+            weaponArray[_New].localPosition = ItemScript.DefaultSpawnLocation;
+        }
+        if (weaponArray[_New] == null)
+        {
+            //disable item script if you are not holding anything
+            ItemScript = null;
+            weaponArray[_Old].localPosition = new Vector3(weaponArray[_Old].position.x, -100, weaponArray[_Old].position.z);
         }
     }
     public int GetFirstEmptySlot()
     {
+        int counter = 0;
         foreach (var item in weaponArray)
         {
             if (item == null)
             {
-                return Array.IndexOf(weaponArray, item);
+                return counter;
             }
             else
             {
+                counter++;
                 continue;
             }
         }
@@ -174,30 +173,28 @@ public class InventoryScript : NetworkBehaviour
         }
         if (Input.GetKeyDown(DropKey))
         {
-            if (ItemScript != null)
-            {
-                ItemScript.Drop(this, selectedWeaponLocal);
-            }
+            ItemManager(false, weaponArray[activeWeaponSynced]);
         }
+        //oddly confusing right? Lists start at 0, the keyboard does not.
         if (Input.GetKeyDown(SlotOne))
         {
-            CmdChangeActiveWeapon(0);
+            CmdEquipItem(activeWeaponSynced, 0);
         }
         if (Input.GetKeyDown(SlotTwo))
         {
-            CmdChangeActiveWeapon(1);
+            CmdEquipItem(activeWeaponSynced, 1);
         }
         if (Input.GetKeyDown(SlotThree))
         {
-            CmdChangeActiveWeapon(2);
+            CmdEquipItem(activeWeaponSynced, 2);
         }
         if (Input.GetKeyDown(SlotFour))
         {
-            CmdChangeActiveWeapon(3);
+            CmdEquipItem(activeWeaponSynced, 3);
         }
         if (Input.GetKeyDown(SlotFive))
         {
-            CmdChangeActiveWeapon(4);
+            CmdEquipItem(activeWeaponSynced, 4);
         }
     }
 }

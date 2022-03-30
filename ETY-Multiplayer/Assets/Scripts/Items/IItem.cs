@@ -7,7 +7,5 @@ public interface IItem
     void Cancel(PlayerScript ps);
     void Equip(PlayerScript ps);
     void Unequip(PlayerScript ps);
-    void Drop(InventoryScript invscr, int slot);
-    void Pickup(InventoryScript invscr, int slot);
     void Delete(InventoryScript invscr, int slot);
 }

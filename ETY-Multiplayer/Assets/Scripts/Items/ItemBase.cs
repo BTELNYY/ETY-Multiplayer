@@ -34,8 +34,7 @@ public class ItemBase : NetworkBehaviour, IItem, IInteract
             return;
         }
         InventoryScript inv = ps.GetInventory();
-        inv.ItemManager(true, ItemObject, 0);
-            int slot = inv.GetFirstEmptySlot();
+        inv.ItemManager(true, ItemObject);
 
         
     }
@@ -66,15 +65,6 @@ public class ItemBase : NetworkBehaviour, IItem, IInteract
     public virtual void Cancel(PlayerScript ps)
     {
 
-    }
-    public virtual void Drop(InventoryScript invscr, int slot)
-    {
-        Debug.Log("Dropping " + ItemObject.name + " from slot " + slot);
-        invscr.ItemManager(false, ItemObject, 0);
-    }
-    public virtual void Pickup(InventoryScript invscr, int slot)
-    {
-        invscr.ItemManager(true, ItemObject, 0);
     }
     public virtual void Delete(InventoryScript invscr, int slot)
     {
