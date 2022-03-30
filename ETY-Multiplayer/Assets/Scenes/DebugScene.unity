@@ -246,6 +246,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5146347189405130296, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: m_Mass
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5146347189405130309, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
         type: 3}
       propertyPath: m_Name
@@ -256,6 +261,11 @@ PrefabInstance:
       propertyPath: Object
       value: 
       objectReference: {fileID: 1080011808}
+    - target: {fileID: 5390029283267037761, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
+        type: 3}
+      propertyPath: clientAuthority
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7442621336911754185, guid: cc6de60ca8dbe1b4aabe68baffc8c240,
         type: 3}
       propertyPath: sceneId
