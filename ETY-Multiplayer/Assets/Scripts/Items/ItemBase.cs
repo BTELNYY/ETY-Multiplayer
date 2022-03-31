@@ -17,16 +17,11 @@ public class ItemBase : NetworkBehaviour, IItem, IInteract
     public int Durability = -1;
     public int Damage = 0;
     public int Healing = 0;
-    public ItemUtility.Items Item = ItemUtility.Items.none;
     public Transform ItemObject;
     public Vector3 DefaultSpawnLocation = new Vector3(0, 0, 0);
     public Quaternion DefaultSpawnRotation = new Quaternion(0, 0, 0, 0);
     //private members
     Rigidbody body;
-    protected virtual ItemUtility.Items CurrentItem()
-    {
-        return Item;
-    }
     public virtual void interact(PlayerScript ps)
     {
         if (!CanBePickedUp)

@@ -49,18 +49,6 @@ public class PlayerScript : NetworkBehaviour, ITick
         interact = GetComponent<PlayerInteractScript>();
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
     public void OnDestroy()
     {
         Globals.RemoveITick(this);
