@@ -104,12 +104,13 @@ public class PlayerScript : NetworkBehaviour, ITick
     public void Kill(DeathTypes death = DeathTypes.Unknown)
     {
         //blah blah death screen
+        ClassGlobals classes = ClassGlobals.Instance;
         CurrentStatusEffects.Clear();
         if (CanRespawn)
         {
             inventory.DropAll();
             RemoveTick();
-            CmdRespawn(gameObject);
+            CmdRespawn(gameObject, classes.DebugPlayer);
         }
         else
         {
@@ -207,12 +208,20 @@ public class PlayerScript : NetworkBehaviour, ITick
     {
         lastDamage = death;
     }
+    [ClientRpc]
+    public void SwitchClass(GameObject new_class)
+    {
+        ClassGlobals classes = ClassGlobals.Instance;
+        inventory.DropAll();
+        RemoveTick();
+        CmdRespawn(gameObject, classes.DebugPlayer);
+    }
     [Command]
-    public void CmdRespawn(GameObject obj)
+    public void CmdRespawn(GameObject obj, GameObject new_class)
     {
         ClassGlobals classes = ClassGlobals.Instance;
         identity = GetComponent<NetworkIdentity>();
-        NetworkServer.ReplacePlayerForConnection(identity.connectionToClient, Instantiate(classes.DebugPlayer));
+        NetworkServer.ReplacePlayerForConnection(identity.connectionToClient, Instantiate(new_class));
         identity.SendMessage("Start");
         Destroy(obj);
     }

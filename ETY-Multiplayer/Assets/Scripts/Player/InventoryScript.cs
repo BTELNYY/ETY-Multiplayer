@@ -65,6 +65,7 @@ public class InventoryScript : NetworkBehaviour
         int counter = 0;
         while(counter < 5)
         {
+            CmdEquipItem(activeWeaponSynced, counter);
             ItemManager(false, weaponArray[counter]);
             counter++;
         }
