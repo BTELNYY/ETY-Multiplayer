@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using Mirror;
-using TMPro;
 public class PlayerScript : NetworkBehaviour, ITick
 {
     [Header("Object Setup")]
@@ -20,7 +19,6 @@ public class PlayerScript : NetworkBehaviour, ITick
     public int HealthRegenPerTick = 1;
     [Header("Respawn Settings")]
     public bool CanRespawn = false;
-    public Transform RespawnPoint;
     
     //new private members
     DeathTypes lastDamage = DeathTypes.Unknown;
@@ -30,26 +28,28 @@ public class PlayerScript : NetworkBehaviour, ITick
     private InventoryScript inventory;
     private MovementScript movement;
     private PlayerInteractScript interact;
-
-    //private members
-    public override void OnStartLocalPlayer()
+    void Start()
     {
         //this works better then the find object stuff since its really laggy and bad
         Globals.AddITick(this);
+        //yes this code is copied, I dont care, I want it to work.
+        if (Camera.main == null)
+        {
+            //makes a new camera if none exists
+            GameObject cam_obj = new GameObject("Camera");
+            cam_obj.AddComponent<Camera>();
+            cam_obj.tag = "MainCamera";
+        }
         Camera.main.transform.SetParent(transform);
         Camera.main.transform.localPosition = new Vector3(0, 1f, 0);
-
-        string name = "Player" + Random.Range(100, 999);
-        Color color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
         PlayerCamera = Camera.main;
         //load the required refrences
         effect = GetComponent<StatusEffects>();
         inventory = GetComponent<InventoryScript>();
         movement = GetComponent<MovementScript>();
         interact = GetComponent<PlayerInteractScript>();
-
     }
-    public void OnDestroy()
+    public void RemoveTick()
     {
         Globals.RemoveITick(this);
     }
@@ -84,6 +84,22 @@ public class PlayerScript : NetworkBehaviour, ITick
         {
             Kill(lastDamage);
         }
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            Suicide();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.visible = !Cursor.visible;
+            if(Cursor.lockState == CursorLockMode.Locked)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
     }
     public void Kill(DeathTypes death = DeathTypes.Unknown)
     {
@@ -91,11 +107,13 @@ public class PlayerScript : NetworkBehaviour, ITick
         CurrentStatusEffects.Clear();
         if (CanRespawn)
         {
-            Respawn();
+            inventory.DropAll();
+            RemoveTick();
+            CmdRespawn(gameObject);
         }
         else
         {
-            PermaDeath();
+            CmdPermaDeath();
         }
     }
     public void Suicide()
@@ -103,16 +121,6 @@ public class PlayerScript : NetworkBehaviour, ITick
         lastDamage = DeathTypes.Suicide;
         Damage(PlayerHealth);
         Kill(lastDamage);
-    }
-    void PermaDeath()
-    {
-
-    }
-    public void Respawn()
-    {
-        Player.position = RespawnPoint.position;
-        PlayerHealth = PlayerMaxHealth;
-        lastDamage = DeathTypes.Unknown;
     }
     public void Damage(float damage)
     {
@@ -198,5 +206,19 @@ public class PlayerScript : NetworkBehaviour, ITick
     public void SetLastDamage(DeathTypes death)
     {
         lastDamage = death;
+    }
+    [Command]
+    public void CmdRespawn(GameObject obj)
+    {
+        ClassGlobals classes = ClassGlobals.Instance;
+        identity = GetComponent<NetworkIdentity>();
+        NetworkServer.ReplacePlayerForConnection(identity.connectionToClient, Instantiate(classes.DebugPlayer));
+        identity.SendMessage("Start");
+        Destroy(obj);
+    }
+    [Command]
+    void CmdPermaDeath()
+    {
+
     }
 }

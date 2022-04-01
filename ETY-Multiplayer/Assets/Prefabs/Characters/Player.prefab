@@ -174,10 +174,7 @@ MonoBehaviour:
   PlayerMaxHealth: 100
   HealthRegen: 0
   HealthRegenPerTick: 1
-  playerNameText: {fileID: 0}
-  floatingInfo: {fileID: 0}
-  CanRespawn: 0
-  RespawnPoint: {fileID: 0}
+  CanRespawn: 1
 --- !u!114 &1839196242192472453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,8 +225,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  weaponArray: []
-  activeWeaponSynced: 1
   PrimaryUse: 323
   SecondaryUse: 324
   DropKey: 116
@@ -238,6 +233,7 @@ MonoBehaviour:
   SlotThree: 51
   SlotFour: 52
   SlotFive: 53
+  activeWeaponSynced: 1
 --- !u!114 &4526841443187143783
 MonoBehaviour:
   m_ObjectHideFlags: 0
