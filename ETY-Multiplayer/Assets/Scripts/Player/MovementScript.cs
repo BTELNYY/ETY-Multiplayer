@@ -30,11 +30,15 @@ public class MovementScript : NetworkBehaviour
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
     float rotationX = 0;
-
-    
-    [Client]
-    public override void OnStartLocalPlayer()
+    void Start()
     {
+        if (Camera.main == null)
+        {
+            //makes a new camera if none exists
+            GameObject cam_obj = new GameObject("Camera");
+            cam_obj.AddComponent<Camera>();
+            cam_obj.tag = "MainCamera";
+        }
         PlayerScript playerScript = GetComponent<PlayerScript>();
         player = playerScript.GetPLayerTransform();
         characterController = player.GetComponent<CharacterController>();
@@ -46,7 +50,6 @@ public class MovementScript : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-    [Client]
     void Update()
     {
         if (!isLocalPlayer) { return; }

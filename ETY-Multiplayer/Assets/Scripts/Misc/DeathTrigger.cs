@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-
-
+﻿using UnityEngine;
 public class DeathTrigger : MonoBehaviour
 {
     [Header("Collider Settings")]
@@ -17,21 +14,9 @@ public class DeathTrigger : MonoBehaviour
     }
     public void OnTagCollider(Collision col)
     {
-        if (!DetectCollisions)
-        {
-            return;
-        }
+        Debug.Log("Collider");
         //gets the players controller script, and kills them
         PlayerScript ps = col.gameObject.GetComponent<PlayerScript>();
-        //if they have the God status effect, ignore them
-        if (ps.HasEffect(StatusEffects.StatusEffect.God))
-        {
-            return;
-        }
-        else
-        {
-            //kills the player
-            ps.Suicide();
-        }
+        ps.Suicide();
     }
 }

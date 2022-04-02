@@ -23,8 +23,15 @@ public class PlayerInteractScript : NetworkBehaviour
     int CooldownCounter;
     PlayerScript playerScript;
     NetworkIdentity identity;
-    public override void OnStartLocalPlayer()
+    void Start()
     {
+        if (Camera.main == null)
+        {
+            //makes a new camera if none exists
+            GameObject cam_obj = new GameObject("Camera");
+            cam_obj.AddComponent<Camera>();
+            cam_obj.tag = "MainCamera";
+        }
         playerScript = GetComponent<PlayerScript>();
         PlayerCamera = playerScript.GetPlayerCamera().transform;
         Camera.main.transform.SetParent(transform);
