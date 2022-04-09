@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 4024139183195928514}
   - component: {fileID: 7804809112489390368}
   - component: {fileID: 5843538527086633680}
+  - component: {fileID: 7716189656079693802}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -151,7 +152,6 @@ MonoBehaviour:
   jumpKey: 32
   crouchKey: 306
   canMove: 1
-  playerCamera: {fileID: 0}
 --- !u!114 &1839196242192472452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,9 +167,12 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   Player: {fileID: 1839196242192472506}
-  identity: {fileID: 4526841443187143783}
-  PlayerName: Player
-  playerColor: {r: 1, g: 1, b: 1, a: 1}
+  CameraDefaultX: 0
+  CameraDefaultY: 0
+  CameraDefaultZ: 0
+  CharacterName: Ayano Aishi
+  playerNameColor: {r: 1, g: 1, b: 1, a: 1}
+  Class: 0
   PlayerHealth: 100
   PlayerMaxHealth: 100
   HealthRegen: 0
@@ -206,7 +209,6 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 4294967295
-  PlayerCamera: {fileID: 0}
   InteractKey: 101
   DenyInteractions: 0
   MaxUsage: 1
@@ -323,3 +325,19 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+--- !u!114 &7716189656079693802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839196242192472507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8977e6019f9e5d41be407c299fe666c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ClassName: DebugClass
+  ClassDescription: A Class for debugging
+  SpawnToolTip: Debug class meant for game debug.
+  ClassExact: 0

@@ -21,10 +21,8 @@ public class MovementScript : NetworkBehaviour
     public KeyCode crouchKey = KeyCode.LeftControl;
     [Header("Other Settings")]
     public bool canMove = true;
-    public Camera playerCamera;
-
+    Camera playerCamera;
     Transform player;
-
     //private members
     PlayerScript playerScript;
     CharacterController characterController;
@@ -44,7 +42,7 @@ public class MovementScript : NetworkBehaviour
         characterController = player.GetComponent<CharacterController>();
         playerCamera = playerScript.GetPlayerCamera();
         Camera.main.transform.SetParent(transform);
-        Camera.main.transform.localPosition = new Vector3(0, 1f, 0);
+        Camera.main.transform.localPosition = playerScript.CameraPosition();
         playerCamera = Camera.main;
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;

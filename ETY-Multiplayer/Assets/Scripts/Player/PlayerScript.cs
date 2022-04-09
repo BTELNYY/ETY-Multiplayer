@@ -8,19 +8,26 @@ public class PlayerScript : NetworkBehaviour, ITick
     [Header("Object Setup")]
     Camera PlayerCamera;
     public Transform Player;
-    public NetworkIdentity identity;
+    NetworkIdentity identity;
+    [Header("Camera Setup")]
+    public float CameraDefaultX = 0f;
+    public float CameraDefaultY = 0f;
+    public float CameraDefaultZ = 0f;
     [Header("Player Setup")]
-    public string PlayerName = "Player";
-    public Color playerColor = Color.white;
+    public string CharacterName = "Ayano Aishi";
+    public Color playerNameColor = Color.white;
     [SyncVar]
     public float PlayerHealth = 100;
+    [SyncVar]
     public float PlayerMaxHealth = 100;
+    [SyncVar]
     public bool HealthRegen = false;
+    [SyncVar]
     public int HealthRegenPerTick = 1;
     [Header("Respawn Settings")]
     public bool CanRespawn = false;
-    
     //new private members
+    private GameObject CurrentClass;
     DeathTypes lastDamage = DeathTypes.Unknown;
     IDictionary<StatusEffects.StatusEffect, int> CurrentStatusEffects = new Dictionary<StatusEffects.StatusEffect, int>();
     //private members, however these can be returned through a method
@@ -28,6 +35,7 @@ public class PlayerScript : NetworkBehaviour, ITick
     private InventoryScript inventory;
     private MovementScript movement;
     private PlayerInteractScript interact;
+    private ClassBase classBase;
     void Start()
     {
         //this works better then the find object stuff since its really laggy and bad
@@ -41,21 +49,22 @@ public class PlayerScript : NetworkBehaviour, ITick
             cam_obj.tag = "MainCamera";
         }
         Camera.main.transform.SetParent(transform);
-        Camera.main.transform.localPosition = new Vector3(0, 1f, 0);
+        Camera.main.transform.localPosition = new Vector3(CameraDefaultX, CameraDefaultY, CameraDefaultZ);
         PlayerCamera = Camera.main;
         //load the required refrences
         effect = GetComponent<StatusEffects>();
         inventory = GetComponent<InventoryScript>();
         movement = GetComponent<MovementScript>();
         interact = GetComponent<PlayerInteractScript>();
+        classBase = GetComponent<ClassBase>();
+    }
+    public Vector3 CameraPosition() 
+    {
+        return new Vector3(CameraDefaultX, CameraDefaultY, CameraDefaultZ);
     }
     public void RemoveTick()
     {
         Globals.RemoveITick(this);
-    }
-    public NetworkIdentity GetIdentity()
-    {
-        return identity;
     }
     public InventoryScript GetInventory()
     {
@@ -108,6 +117,10 @@ public class PlayerScript : NetworkBehaviour, ITick
         CurrentStatusEffects.Clear();
         if (CanRespawn)
         {
+            if(classes.DebugPlayer == null)
+            {
+                Debug.Log("debug player is null v2");
+            }
             inventory.DropAll();
             RemoveTick();
             CmdRespawn(gameObject, classes.DebugPlayer);
@@ -166,6 +179,40 @@ public class PlayerScript : NetworkBehaviour, ITick
         Attacked,
         FallDamage,
     }
+    public void SetLastDamage(DeathTypes death)
+    {
+        lastDamage = death;
+    }
+    public void SwitchClass(GameObject new_class)
+    {
+        ClassGlobals classes = ClassGlobals.Instance;
+        if(classes.DebugPlayer == null)
+        {
+            Debug.Log("Debug Player is null");
+        }
+        inventory.DropAll();
+        RemoveTick();
+        CmdRespawn(gameObject, classes.DebugPlayer);
+    }
+    [Command]
+    public void CmdRespawn(GameObject obj, GameObject new_class)
+    {
+        ClassGlobals classes = ClassGlobals.Instance;
+        identity = GetComponent<NetworkIdentity>();
+        if(new_class == null)
+        {
+            Debug.Log("No class was given to respawn with!");
+            return;
+        }
+        NetworkServer.ReplacePlayerForConnection(identity.connectionToClient, Instantiate(new_class));
+        identity.SendMessage("Start");
+        Destroy(obj);
+    }
+    [Command]
+    void CmdPermaDeath()
+    {
+
+    }
     //the purpose of these methods is to remove the dict from being public, as that would cause a lot of issues
     public void RemoveEffect(StatusEffects.StatusEffect effect)
     {
@@ -203,31 +250,5 @@ public class PlayerScript : NetworkBehaviour, ITick
         {
             CurrentStatusEffects[effect] = -amount;
         }
-    }
-    public void SetLastDamage(DeathTypes death)
-    {
-        lastDamage = death;
-    }
-    [ClientRpc]
-    public void SwitchClass(GameObject new_class)
-    {
-        ClassGlobals classes = ClassGlobals.Instance;
-        inventory.DropAll();
-        RemoveTick();
-        CmdRespawn(gameObject, classes.DebugPlayer);
-    }
-    [Command]
-    public void CmdRespawn(GameObject obj, GameObject new_class)
-    {
-        ClassGlobals classes = ClassGlobals.Instance;
-        identity = GetComponent<NetworkIdentity>();
-        NetworkServer.ReplacePlayerForConnection(identity.connectionToClient, Instantiate(new_class));
-        identity.SendMessage("Start");
-        Destroy(obj);
-    }
-    [Command]
-    void CmdPermaDeath()
-    {
-
     }
 }

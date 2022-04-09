@@ -9,8 +9,6 @@ public class PlayerInteractScript : NetworkBehaviour
     public float rayDistance;
     public float rayShpereRadius;
     public LayerMask interactableLayer;
-    public Transform PlayerCamera;
-    public RaycastHit hit;
     [Header("Key Settings")]
     public KeyCode InteractKey = KeyCode.E; //KeyCode for interacting, for settings and stuff.
     [Header("Player Actions")]
@@ -22,7 +20,6 @@ public class PlayerInteractScript : NetworkBehaviour
     int CurrentUsage;
     int CooldownCounter;
     PlayerScript playerScript;
-    NetworkIdentity identity;
     void Start()
     {
         if (Camera.main == null)
@@ -33,10 +30,8 @@ public class PlayerInteractScript : NetworkBehaviour
             cam_obj.tag = "MainCamera";
         }
         playerScript = GetComponent<PlayerScript>();
-        PlayerCamera = playerScript.GetPlayerCamera().transform;
         Camera.main.transform.SetParent(transform);
-        Camera.main.transform.localPosition = new Vector3(0, 1f, 0);
-        identity = playerScript.GetIdentity();
+        Camera.main.transform.localPosition = playerScript.CameraPosition();
     }
     void Update()
     {

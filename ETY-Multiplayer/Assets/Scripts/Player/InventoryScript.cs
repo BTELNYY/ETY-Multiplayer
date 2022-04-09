@@ -46,6 +46,10 @@ public class InventoryScript : NetworkBehaviour
         }
         CurrentTransform = transform;
     }
+    void Start()
+    {
+        player = GetComponent<PlayerScript>();
+    }
     public void ItemManager(bool operation, Transform Item)
     {
         //runs locally
