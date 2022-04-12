@@ -643,7 +643,7 @@ MonoBehaviour:
   networkAddress: localhost
   maxConnections: 100
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 1839196242192472507, guid: 50028bd2c91cb3e479170bf92b1038e2,
+  playerPrefab: {fileID: 2358089248927590229, guid: cff844342e9a8894aab67363f8b0e760,
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
